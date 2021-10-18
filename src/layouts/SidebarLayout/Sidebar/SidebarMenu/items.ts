@@ -1,21 +1,10 @@
 import { ReactNode } from 'react';
-
-import DesignServicesTwoToneIcon from '@mui/icons-material/DesignServicesTwoTone';
-import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
-import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
-import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
-import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-import BallotTwoToneIcon from '@mui/icons-material/BallotTwoTone';
-import BeachAccessTwoToneIcon from '@mui/icons-material/BeachAccessTwoTone';
-import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
-import FilterVintageTwoToneIcon from '@mui/icons-material/FilterVintageTwoTone';
-import HowToVoteTwoToneIcon from '@mui/icons-material/HowToVoteTwoTone';
-import LocalPharmacyTwoToneIcon from '@mui/icons-material/LocalPharmacyTwoTone';
-import RedeemTwoToneIcon from '@mui/icons-material/RedeemTwoTone';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import TrafficTwoToneIcon from '@mui/icons-material/TrafficTwoTone';
-import VerifiedUserTwoToneIcon from '@mui/icons-material/VerifiedUserTwoTone';
-
+import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
+import PeopleIcon from '@mui/icons-material/People';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import HomeIcon from '@mui/icons-material/Home';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -31,130 +20,42 @@ export interface MenuItems {
 
 const menuItems: MenuItems[] = [
   {
-    heading: '',
+    heading: 'Dashboard',
     items: [
       {
-        name: 'Overview',
-        link: '/overview',
-        icon: DesignServicesTwoToneIcon
+        name: 'Dashboard',
+        icon: HomeIcon,
+        link: '/dashboard'
       }
-    ]
-  },
-  {
-    heading: 'Dashboards',
-    items: [
-      {
-        name: 'Crypto',
-        link: '/dashboards/crypto',
-        icon: BrightnessLowTwoToneIcon
-      },
-      {
-        name: 'Messenger',
-        icon: MmsTwoToneIcon,
-        link: '/dashboards/messenger'
-      },
     ]
   },
   {
     heading: 'Management',
     items: [
       {
-        name: 'Transactions',
-        icon: TableChartTwoToneIcon,
-        link: '/management/transactions'
+        name: 'Building information',
+        icon: HomeWorkIcon,
+        link: '/management/building-information'
       },
       {
-        name: 'User Profile',
-        icon: AccountCircleTwoToneIcon,
-        link: '/management/profile',
-        items: [
-          {
-            name: 'Profile Details',
-            link: '/management/profile/details'
-          },
-          {
-            name: 'User Settings',
-            link: '/management/profile/settings'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    heading: 'Components',
-    items: [
-      {
-        name: 'Buttons',
-        icon: BallotTwoToneIcon,
-        link: '/components/buttons'
+        name: 'Employees',
+        icon: PeopleIcon,
+        link: '/management/employees'
       },
       {
-        name: 'Modals',
-        icon: BeachAccessTwoToneIcon,
-        link: '/components/modals'
+        name: 'Staff building',
+        icon: PeopleOutlineIcon,
+        link: '/management/staff-building'
       },
       {
-        name: 'Accordions',
-        icon: EmojiEventsTwoToneIcon,
-        link: '/components/accordions'
+        name: 'Companies',
+        icon: ApartmentIcon,
+        link: '/management/companies'
       },
       {
-        name: 'Tabs',
-        icon: FilterVintageTwoToneIcon,
-        link: '/components/tabs'
-      },
-      {
-        name: 'Badges',
-        icon: HowToVoteTwoToneIcon,
-        link: '/components/badges'
-      },
-      {
-        name: 'Tooltips',
-        icon: LocalPharmacyTwoToneIcon,
-        link: '/components/tooltips'
-      },
-      {
-        name: 'Avatars',
-        icon: RedeemTwoToneIcon,
-        link: '/components/avatars'
-      },
-      {
-        name: 'Cards',
-        icon: SettingsTwoToneIcon,
-        link: '/components/cards'
-      },
-      {
-        name: 'Forms',
-        icon: TrafficTwoToneIcon,
-        link: '/components/forms'
-      },
-    ]
-  },
-  {
-    heading: 'Extra Pages',
-    items: [
-      {
-        name: 'Status',
-        icon: VerifiedUserTwoToneIcon,
-        link: '/status',
-        items: [
-          {
-            name: 'Error 404',
-            link: '/status/404'
-          },
-          {
-            name: 'Error 500',
-            link: '/status/500'
-          },
-          {
-            name: 'Maintenance',
-            link: '/status/maintenance'
-          },
-          {
-            name: 'Coming Soon',
-            link: '/status/coming-soon'
-          }
-        ]
+        name: 'Services',
+        icon: MiscellaneousServicesIcon,
+        link: '/management/services'
       }
     ]
   }

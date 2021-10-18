@@ -21,7 +21,7 @@ function Footer() {
         >
           <Box>
             <Typography variant="subtitle1">
-              &copy; 2021 - Tokyo Free White React Admin Dashboard
+              &copy; 2021 - React Admin Dashboard
             </Typography>
           </Box>
           <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">

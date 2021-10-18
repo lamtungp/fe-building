@@ -98,8 +98,6 @@ const LogoText = styled(Box)(
 );
 
 function Logo() {
-
-
   return (
     <LogoWrapper to="/overview">
       <LogoSignWrapper>
@@ -112,7 +110,7 @@ function Logo() {
           <Tooltip title="Version 1.1.0" arrow placement="right">
             <VersionBadge>1.1</VersionBadge>
           </Tooltip>
-          <LogoText>Tokyo Free White</LogoText>
+          <LogoText>Admin Dashboard</LogoText>
         </LogoTextWrapper>
       </Hidden>
     </LogoWrapper>
