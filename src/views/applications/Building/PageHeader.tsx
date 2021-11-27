@@ -1,11 +1,6 @@
 import { Typography, Grid } from '@mui/material';
 
 const PageHeader: React.FunctionComponent = (): React.ReactElement => {
-
-  const user =
-  {
-    avatar: '/static/images/avatars/1.jpg'
-  };
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>

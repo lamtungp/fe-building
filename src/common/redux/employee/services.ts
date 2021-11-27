@@ -1,11 +1,32 @@
 import AxiosClient from '../../utils/axiosClient';
 
-// import { LoginParams } from './actionTypes';
+// import { UpdateParams } from './ActionTypes';
 
-// const authServices = {
-//     login: (data: LoginParams): Promise<any> => {
-//         const results = AxiosClient.post('/auth/user-login', data);
-//         return results;
-//     },
-// };
-// export default authServices;
+const EmployeeServices = {
+  create: (data: any): Promise<any> => {
+    const results = AxiosClient.post('/employee', data);
+    return results;
+  },
+
+  update: (data: any): Promise<any> => {
+    const results = AxiosClient.put('/employee', data);
+    return results;
+  },
+
+  show: (id: string): Promise<any> => {
+    const results = AxiosClient.get(`/employee/${id}`);
+    return results;
+  },
+
+  index: (): Promise<any> => {
+    const results = AxiosClient.get(`/employee`);
+    return results;
+  },
+
+  destroy: (id: string): Promise<any> => {
+    const results = AxiosClient.delete(`/employee/${id}`);
+    return results;
+  }
+};
+
+export default EmployeeServices;

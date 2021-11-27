@@ -2,21 +2,19 @@ import { Typography, Button, Grid } from '@mui/material';
 
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
-function PageHeader() {
+import { useNavigate } from 'react-router-dom';
 
-  const user =
-  {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
-  };
+const PageHeader: React.FunctionComponent = (): React.ReactElement => {
+  const navigate = useNavigate()
+
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Transactions
+          Services
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, these are your recent transactions
+          These are your recent services
         </Typography>
       </Grid>
       <Grid item>
@@ -24,8 +22,9 @@ function PageHeader() {
           sx={{ mt: { xs: 2, md: 0 } }}
           variant="contained"
           startIcon={<AddTwoToneIcon fontSize="small" />}
+          onClick={() => navigate('/management/add-service')}
         >
-          Create transaction
+          Add service
         </Button>
       </Grid>
     </Grid>

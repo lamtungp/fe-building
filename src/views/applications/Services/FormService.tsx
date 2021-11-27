@@ -7,7 +7,7 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import PageHeader from './PageHeader';
 import { useNavigate } from 'react-router-dom';
 import Footer from 'src/components/Footer';
-import BuildingServices from 'src/common/redux/building/services';
+import SvServices from 'src/common/redux/service/services';
 
 const validationSchema = yup.object({  
   name: yup
@@ -21,7 +21,7 @@ const validationSchema = yup.object({
     .required('Hotline is required')
 });
 
-const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
+const FormService: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -44,7 +44,7 @@ const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
   return (
     <div>
       <Helmet>
-        <title>Form Building</title>
+        <title>Form Service</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />
@@ -139,4 +139,4 @@ const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
   );
 };
 
-export default FormBuilding;
+export default FormService;

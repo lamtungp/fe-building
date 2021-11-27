@@ -1,9 +1,7 @@
 export interface BuildingState {
-  // jwtToken: string;
-  user: any;
+  building: any;
 }
 
 const initialState: BuildingState = {
-  // jwtToken: '',
-  user: { email: '', token: '' }
+  building: { name: '', address: '', hotline: '' }
 };

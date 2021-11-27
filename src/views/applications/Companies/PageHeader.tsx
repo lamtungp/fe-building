@@ -1,22 +1,19 @@
 import { Typography, Button, Grid } from '@mui/material';
 
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { useNavigate } from 'react-router-dom';
 
 const PageHeader: React.FunctionComponent = (): React.ReactElement => {
-
-  const user =
-  {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
-  };
+  const navigate = useNavigate()
+  
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Transactions
+          Companies
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, these are your recent transactions
+          These are building's companiesrecent
         </Typography>
       </Grid>
       <Grid item>
@@ -24,8 +21,9 @@ const PageHeader: React.FunctionComponent = (): React.ReactElement => {
           sx={{ mt: { xs: 2, md: 0 } }}
           variant="contained"
           startIcon={<AddTwoToneIcon fontSize="small" />}
+          onClick={() => navigate('/management/add-company')}
         >
-          Create transaction
+          Add company
         </Button>
       </Grid>
     </Grid>

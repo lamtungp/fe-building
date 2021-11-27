@@ -1,8 +1,9 @@
 export const BUILDING_ACTIONS = {};
 
 interface UpdateParams {
-  name: string;
-  address: string;
+  name?: string;
+  address?: string;
+  hotline?: string;
 }
 
 export type { UpdateParams };

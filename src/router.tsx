@@ -22,6 +22,11 @@ const Staffs = Loader(lazy(() => import('src/views/applications/Staffs')));
 const Companies = Loader(lazy(() => import('src/views/applications/Companies')));
 
 const FormBuilding = Loader(lazy(() => import('src/views/applications/Building/FormBuilding')));
+const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/FormCompany')));
+const FormStaff = Loader(lazy(() => import('src/views/applications/Staffs/FormStaff')));
+const FormEmployee = Loader(lazy(() => import('src/views/applications/Employees/FormEmployee')));
+const FormService = Loader(lazy(() => import('src/views/applications/Services/FormService')));
+
 
 // const UserProfile = Loader(lazy(() => import('src/content/applications/Users/profile')));
 // const UserSettings = Loader(lazy(() => import('src/content/applications/Users/settings')));
@@ -93,16 +98,32 @@ const routes: PartialRouteObject[] = [
         element: <Employees />
       },
       {
+        path: 'add-employee',
+        element: <FormEmployee />
+      },
+      {
         path: 'staff-building',
         element: <Staffs />
       },
       {
+        path: 'add-staff',
+        element: <FormStaff />
+      },
+      {
         path: 'companies',
-        element: <Companies />
+        element: <Companies />,
+      },
+      {
+        path: 'add-company',
+        element: <FormCompany />
       },
       {
         path: 'services',
         element: <Services />
+      },
+      {
+        path: 'add-service',
+        element: <FormService />
       },
     ]
   },
