@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography } from '@mui/material';
+import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import PageHeader from './PageHeader';
@@ -12,23 +12,31 @@ import CompanyServices from 'src/common/redux/company/services';
 const validationSchema = yup.object({  
   name: yup
     .string()
-    .required('Name building is required'),
-    address: yup
+    .required('The name of company is required'),
+  tax_code: yup
     .string()
-    .required('Address is required'),
-    hotline: yup
+    .required('Tax code is required'),
+  capital: yup
     .string()
-    .required('Hotline is required')
+    .required('Capital is required'),
+  filed_operation: yup
+    .string()
+    .required('Filed operation is required'),
+    phone_number: yup
+    .string()
+    .required('Phone number is required')
 });
 
 const FormCompany: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
-
+  
   const formik = useFormik({
     initialValues: {
       name: '',
-      address: '',
-      hotline: ''
+      tax_code: '',
+      capital: '',
+      filed_operation: '',
+      phone_number: ''
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -67,10 +75,10 @@ const FormCompany: React.FunctionComponent = (): React.ReactElement => {
               >
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    Building Details
+                    Company Details
                   </Typography>
                   <Typography variant="subtitle2">
-                    Manage informations related to your building details
+                    Manage informations related to your company details
                   </Typography>
                 </Box>
               </Box>
@@ -84,7 +92,7 @@ const FormCompany: React.FunctionComponent = (): React.ReactElement => {
                         fullWidth
                         id="name"
                         name="name"
-                        label="Name Building"
+                        label="Name"
                         value={formik.values.name}
                         onChange={formik.handleChange}
                         error={formik.touched.name && Boolean(formik.errors.name)}
@@ -96,13 +104,30 @@ const FormCompany: React.FunctionComponent = (): React.ReactElement => {
                     <TextField
                       margin={'normal'}
                       fullWidth
-                      id="address"
-                      name="address"
-                      label="Address"
-                      value={formik.values.address}
+                      id="tax_code"
+                      name="tax_code"
+                      label="Tax Code"
+                      value={formik.values.tax_code}
                       onChange={formik.handleChange}
-                      error={formik.touched.address && Boolean(formik.errors.address)}
-                      helperText={formik.touched.address && formik.errors.address}
+                      error={formik.touched.tax_code && Boolean(formik.errors.tax_code)}
+                      helperText={formik.touched.tax_code && formik.errors.tax_code}
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={12}>
+                    <TextField
+                      margin={'normal'}
+                      fullWidth
+                      id="capital"
+                      name="capital"
+                      label="Authorized capital"
+                      value={formik.values.capital}
+                      onChange={formik.handleChange}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">VND</InputAdornment>,
+                      }}
+                      error={formik.touched.capital && Boolean(formik.errors.capital)}
+                      helperText={formik.touched.capital && formik.errors.capital}
                     />
                   </Grid>
 
@@ -110,13 +135,27 @@ const FormCompany: React.FunctionComponent = (): React.ReactElement => {
                     <TextField
                       margin={'normal'}
                       fullWidth
-                      id="hotline"
-                      name="hotline"
-                      label="Hotline"
-                      value={formik.values.hotline}
+                      id="filed_operation"
+                      name="filed_operation"
+                      label="Filed Operation"
+                      value={formik.values.filed_operation}
                       onChange={formik.handleChange}
-                      error={formik.touched.hotline && Boolean(formik.errors.hotline)}
-                      helperText={formik.touched.hotline && formik.errors.hotline}
+                      error={formik.touched.filed_operation && Boolean(formik.errors.filed_operation)}
+                      helperText={formik.touched.filed_operation && formik.errors.filed_operation}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      margin={'normal'}
+                      fullWidth
+                      id="phone_number"
+                      name="phone_number"
+                      label="Phone Number"
+                      value={formik.values.phone_number}
+                      onChange={formik.handleChange}
+                      error={formik.touched.phone_number && Boolean(formik.errors.phone_number)}
+                      helperText={formik.touched.phone_number && formik.errors.phone_number}
                     />
                   </Grid>
 

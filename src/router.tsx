@@ -53,7 +53,6 @@ const routes: PartialRouteObject[] = [
           />
         )
       },
-     
       {
         path: '*',
         element: <Status404 />

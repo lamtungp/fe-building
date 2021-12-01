@@ -67,10 +67,10 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
               >
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    Building Details
+                    Service Details
                   </Typography>
                   <Typography variant="subtitle2">
-                    Manage informations related to your building details
+                    Manage informations related to your service details
                   </Typography>
                 </Box>
               </Box>

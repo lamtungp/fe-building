@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  db:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3308:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: manage_building
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./database:/var/lib/mysql
+    cap_add:
+      - SYS_NICE

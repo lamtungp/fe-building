@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
@@ -8,6 +8,9 @@ import PageHeader from './PageHeader';
 import { useNavigate } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import BuildingServices from 'src/common/redux/building/services';
+import { BuildingParams } from 'src/common/redux/building/ActionTypes';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const validationSchema = yup.object({  
   name: yup
@@ -23,22 +26,37 @@ const validationSchema = yup.object({
 
 const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
+  const MySwal = withReactContent(Swal)
 
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      address: '',
-      hotline: ''
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      handleUpdate(values)
-    },
-  });
+  const [building, setBuilding] = React.useState<BuildingParams>({
+    name: '',
+    address: '',
+    hotline: ''
+  })
+
+  const getInforBuilding = async () => {
+    const data = await BuildingServices.show()
+    setBuilding(data)
+  }
+
+  React.useEffect(() => {
+    getInforBuilding()
+  }, [])
+
+  
 
   const handleUpdate = async (values: any) => {
-    console.log(values);
-    // await BuildingServices.update(values)
+    const res = await BuildingServices.update(values)
+    if (res) {
+      MySwal.fire({
+        text: 'Update building information successfully',
+        icon: 'success',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await getInforBuilding();
+        }
+      })
+    }
   }
 
   return (
@@ -78,45 +96,53 @@ const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
               <Divider />
 
               <CardContent sx={{ p: 4, mx: 6 }}>
-                <form onSubmit={formik.handleSubmit}>
+              <Formik
+                initialValues={building}
+                validationSchema={validationSchema}
+                enableReinitialize
+                onSubmit={(values) => {
+                  handleUpdate(values);
+                }}
+                validateOnChange={true}
+            >
+              {({ handleChange, handleSubmit, errors, touched, values }) => (
+                <form>
                   <Grid item xs={12}>
                     <TextField
                         fullWidth
                         id="name"
                         name="name"
                         label="Name Building"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
+                        value={values.name}
+                        onChange={handleChange}
+                        error={touched.name && Boolean(errors.name)}
+                        helperText={touched.name && errors.name}
                       />
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid item xs={12} marginTop={2}>
                     <TextField
-                      margin={'normal'}
                       fullWidth
                       id="address"
                       name="address"
                       label="Address"
-                      value={formik.values.address}
-                      onChange={formik.handleChange}
-                      error={formik.touched.address && Boolean(formik.errors.address)}
-                      helperText={formik.touched.address && formik.errors.address}
+                      value={values.address}
+                      onChange={handleChange}
+                      error={touched.address && Boolean(errors.address)}
+                      helperText={touched.address && errors.address}
                     />
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid item xs={12} marginTop={2}>
                     <TextField
-                      margin={'normal'}
                       fullWidth
                       id="hotline"
                       name="hotline"
                       label="Hotline"
-                      value={formik.values.hotline}
-                      onChange={formik.handleChange}
-                      error={formik.touched.hotline && Boolean(formik.errors.hotline)}
-                      helperText={formik.touched.hotline && formik.errors.hotline}
+                      value={values.hotline}
+                      onChange={handleChange}
+                      error={touched.hotline && Boolean(errors.hotline)}
+                      helperText={touched.hotline && errors.hotline}
                     />
                   </Grid>
 
@@ -124,11 +150,14 @@ const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
                     <Button color="primary" variant="outlined" onClick={() => navigate('/management/building-information')}>
                       Back
                     </Button>
-                    <Button color="primary" variant="contained" type="submit">
+                    <Button color="primary" variant="contained" onClick={() => handleSubmit()}>
                       Submit
                     </Button>
                   </Box>
                 </form>
+              )}
+            </Formik>
+                
               </CardContent>
             </Card>
           </Grid>

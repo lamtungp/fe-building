@@ -67,10 +67,10 @@ const FormStaff: React.FunctionComponent = (): React.ReactElement => {
               >
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    Building Details
+                    Staff Details
                   </Typography>
                   <Typography variant="subtitle2">
-                    Manage informations related to your building details
+                    Manage informations related to your staff details
                   </Typography>
                 </Box>
               </Box>

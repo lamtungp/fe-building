@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {
   Grid,
   Typography,
@@ -13,9 +15,22 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import Text from 'src/components/Text';
 // import Label from 'src/components/Label';
 import { useNavigate } from 'react-router-dom';
+import BuildingServices from 'src/common/redux/building/services'
+import { BuildingParams } from 'src/common/redux/building/ActionTypes';
 
 const BuildingInformation: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
+
+  const [building, setBuilding] = React.useState<BuildingParams>({})
+
+  const getInforBuilding = async () => {
+    const data = await BuildingServices.show()
+    setBuilding(data)
+  }
+
+  React.useEffect(() => {
+    getInforBuilding()
+  }, [])
 
   return (
     <Grid container spacing={3}>
@@ -50,7 +65,7 @@ const BuildingInformation: React.FunctionComponent = (): React.ReactElement => {
                 </Grid>
                 <Grid item xs={12} sm={8} md={8}>
                   <Text color="black">
-                    <b>Craig Donin</b>
+                    <b>{building.name}</b>
                   </Text>
                 </Grid>
                 <Grid item xs={12} sm={4} md={4} textAlign={{ sm: 'left' }}>
@@ -61,8 +76,7 @@ const BuildingInformation: React.FunctionComponent = (): React.ReactElement => {
                 <Grid item xs={12} sm={8} md={8}>
                 <Box sx={{ maxWidth: { xs: 'auto', sm: 300 } }}>
                     <Text color="black">
-                      1749 High Meadow Lane, SEQUOIA NATIONAL PARK, California,
-                      93262
+                      {building.address}
                     </Text>
                   </Box>
                 </Grid>
@@ -73,7 +87,7 @@ const BuildingInformation: React.FunctionComponent = (): React.ReactElement => {
                 </Grid>
                 <Grid item xs={12} sm={8} md={8}>
                     <Text color="black">
-                      <b>0123456789</b>
+                      <b>{building.hotline}</b>
                     </Text>
                 </Grid>
               </Grid>

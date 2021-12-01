@@ -8,6 +8,7 @@ import PageHeader from './PageHeader';
 import { useNavigate } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import EmployeeServices from 'src/common/redux/employee/services';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 const validationSchema = yup.object({  
   name: yup
@@ -23,6 +24,7 @@ const validationSchema = yup.object({
 
 const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
+  const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
 
   const formik = useFormik({
     initialValues: {
@@ -37,9 +39,14 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
   });
 
   const handleUpdate = async (values: any) => {
+    values = {...values, dob: value}
     console.log(values);
     // await EmployeeServices.update(values)
   }
+
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <div>
@@ -67,10 +74,10 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
               >
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    Building Details
+                    Employee Details
                   </Typography>
                   <Typography variant="subtitle2">
-                    Manage informations related to your building details
+                    Manage informations related to your employee details
                   </Typography>
                 </Box>
               </Box>
@@ -104,6 +111,16 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
                       error={formik.touched.address && Boolean(formik.errors.address)}
                       helperText={formik.touched.address && formik.errors.address}
                     />
+                  </Grid>
+
+                  <Grid item xs={12} marginTop={1}>
+                    <DesktopDatePicker
+                        label="Day of Birth"
+                        inputFormat="dd/MM/yyyy"
+                        value={value}
+                        onChange={handleChange}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
                   </Grid>
 
                   <Grid item xs={12}>
