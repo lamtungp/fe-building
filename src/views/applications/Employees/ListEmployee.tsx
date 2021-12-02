@@ -1,6 +1,6 @@
 import { Card } from '@mui/material';
 import { CryptoOrder } from 'src/models/crypto_order';
-import RecentOrdersTable from './RecentOrdersTable';
+import RecentOrdersTable from './ListEmployeeTable';
 import { subDays } from 'date-fns';
 
 const RecentOrders: React.FunctionComponent = (): React.ReactElement => {

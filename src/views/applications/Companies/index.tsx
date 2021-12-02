@@ -4,7 +4,7 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import RecentOrders from './RecentOrders';
+import ListCompany from './ListCompany';
 
 const Companies: React.FunctionComponent = (): React.ReactElement => {
   return (
@@ -24,7 +24,7 @@ const Companies: React.FunctionComponent = (): React.ReactElement => {
           spacing={3}
         >
           <Grid item xs={12}>
-            <RecentOrders />
+            <ListCompany />
           </Grid>
         </Grid>
       </Container>

@@ -101,11 +101,19 @@ const routes: PartialRouteObject[] = [
         element: <FormEmployee />
       },
       {
+        path: 'edit-employee/:id',
+        element: <FormEmployee />
+      },
+      {
         path: 'staff-building',
         element: <Staffs />
       },
       {
         path: 'add-staff',
+        element: <FormStaff />
+      },
+      {
+        path: 'edit-staff/:id',
         element: <FormStaff />
       },
       {
@@ -117,11 +125,19 @@ const routes: PartialRouteObject[] = [
         element: <FormCompany />
       },
       {
+        path: 'edit-company/:id',
+        element: <FormCompany />
+      },
+      {
         path: 'services',
         element: <Services />
       },
       {
         path: 'add-service',
+        element: <FormService />
+      },
+      {
+        path: 'edit-service/:id',
         element: <FormService />
       },
     ]

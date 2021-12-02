@@ -2,13 +2,13 @@ import AxiosClient from '../../utils/axiosClient';
 import { BuildingParams } from './ActionTypes';
 
 const BuildingServices = {
-  update: (data: BuildingParams): Promise<any> => {
-    const results = AxiosClient.put('/building', data);
+  update: async (data: BuildingParams): Promise<any> => {
+    const results = await AxiosClient.put('/building', data);
     return results;
   },
 
-  show: (): Promise<any> => {
-    const results = AxiosClient.get(`/building`);
+  show: async (): Promise<any> => {
+    const results = await AxiosClient.get(`/building`);
     return results;
   }
 };

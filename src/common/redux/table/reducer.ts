@@ -1,14 +1,14 @@
 import { COMPANY_ACTIONS } from './ActionTypes';
 
-export interface CompanyState {
+export interface TableState {
   isDelete: boolean;
 }
 
-const initialState: CompanyState = {
+const initialState: TableState = {
   isDelete: false
 };
 
-const reducer = (state = initialState, action: any): CompanyState => {
+const reducer = (state = initialState, action: any): TableState => {
   switch (action.type) {
     case COMPANY_ACTIONS.IS_DELETE:
       return {
