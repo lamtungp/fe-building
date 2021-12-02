@@ -5,12 +5,11 @@ import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Ty
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import PageHeader from './PageHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import CompanyServices from 'src/common/redux/company/services';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { useParams } from 'react-router-dom';
 
 const validationSchema = yup.object({  
   name: yup

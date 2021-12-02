@@ -2,10 +2,12 @@ import { COMPANY_ACTIONS } from './ActionTypes';
 
 export interface TableState {
   isDelete: boolean;
+  selectCompany: string;
 }
 
 const initialState: TableState = {
-  isDelete: false
+  isDelete: false,
+  selectCompany: ''
 };
 
 const reducer = (state = initialState, action: any): TableState => {
@@ -14,6 +16,11 @@ const reducer = (state = initialState, action: any): TableState => {
       return {
         ...state,
         isDelete: action.payload
+      };
+    case COMPANY_ACTIONS.SELECT_COMPANY:
+      return {
+        ...state,
+        selectCompany: action.payload
       };
     default:
       return state;

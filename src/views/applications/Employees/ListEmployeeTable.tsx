@@ -1,6 +1,5 @@
-import { FC, ChangeEvent, useState } from 'react';
+import { FC, ChangeEvent, useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -22,53 +21,38 @@ import {
   MenuItem,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  OutlinedInput
 } from '@mui/material';
 
 import Label from 'src/components/Label';
-import { CryptoOrder, CryptoOrderStatus } from 'src/models/crypto_order';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import BulkActions from './BulkActions';
-
-interface RecentOrdersTableProps {
+import BulkActions from 'src/components/BulkActions/BulkActions';
+import { useDispatch } from 'react-redux';
+import { deleteItem, selectCompany } from 'src/common/redux/table/Actions';
+import EmployeeServices from 'src/common/redux/employee/services';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import CompanyServices from 'src/common/redux/company/services';
+import { useNavigate } from 'react-router-dom';
+interface ListEmployeeTableProps {
   className?: string;
-  cryptoOrders: CryptoOrder[];
+  employees: any[];
 }
 
 interface Filters {
-  status?: CryptoOrderStatus;
+  status?: any;
 }
 
-const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
-  const map = {
-    failed: {
-      text: 'Failed',
-      color: 'error'
-    },
-    completed: {
-      text: 'Completed',
-      color: 'success'
-    },
-    pending: {
-      text: 'Pending',
-      color: 'warning'
-    }
-  };
-
-  const { text, color }: any = map[cryptoOrderStatus];
-
-  return <Label color={color}>{text}</Label>;
-};
-
 const applyFilters = (
-  cryptoOrders: CryptoOrder[],
+  employees: any[],
   filters: Filters
-): CryptoOrder[] => {
-  return cryptoOrders.filter((cryptoOrder) => {
+): any[] => {
+  return employees.filter((employeeStatus) => {
     let matches = true;
 
-    if (filters.status && cryptoOrder.status !== filters.status) {
+    if (filters.status && employeeStatus.status !== filters.status) {
       matches = false;
     }
 
@@ -77,82 +61,69 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  cryptoOrders: CryptoOrder[],
+  employees: any[],
   page: number,
   limit: number
-): CryptoOrder[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
+): any[] => {
+  return employees.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
-
-  const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
+const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
+  const MySwal = withReactContent(Swal)
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  
+  const [listCompany, setListCompany] = useState([])
+  const [selectedCompany, setSelectedCompany] = useState('');
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedCryptoOrders.length > 0;
+  const selectedBulkActions = selectedEmployees.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
 
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: 'completed',
-      name: 'Completed'
-    },
-    {
-      id: 'pending',
-      name: 'Pending'
-    },
-    {
-      id: 'failed',
-      name: 'Failed'
-    }
-  ];
-
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
-
-    if (e.target.value !== 'all') {
-      value = e.target.value;
-    }
-
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: value
-    }));
-  };
-
-  const handleSelectAllCryptoOrders = (
+  const handleSelectAllEmployees = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedCryptoOrders(
+    setSelectedEmployees(
       event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.id)
+        ? employees.map((employee) => employee.id)
         : []
     );
   };
 
-  const handleSelectOneCryptoOrder = (
+  const handleSelectOneEmployee = (
     event: ChangeEvent<HTMLInputElement>,
-    cryptoOrderId: string
+    employeesId: string
   ): void => {
-    if (!selectedCryptoOrders.includes(cryptoOrderId)) {
-      setSelectedCryptoOrders((prevSelected) => [
+    if (!selectedEmployees.includes(employeesId)) {
+      setSelectedEmployees((prevSelected) => [
         ...prevSelected,
-        cryptoOrderId
+        employeesId
       ]);
     } else {
-      setSelectedCryptoOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== cryptoOrderId)
+      setSelectedEmployees((prevSelected) =>
+        prevSelected.filter((id) => id !== employeesId)
       );
     }
   };
+
+
+  const getListCompany = async (): Promise<any> => {
+    const data = await CompanyServices.index();
+    setListCompany(data);
+    if (data.length > 0) {
+      setSelectedCompany(data[0].id)
+      dispatch(selectCompany(data[0].id))
+    }
+  }
+
+  useEffect(() => {
+    getListCompany();
+  }, [])
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
@@ -162,18 +133,47 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
+  const handleSelectedCompany = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedCompany(e.target.value)
+    dispatch(selectCompany(e.target.value))
+  }
+
+  const filteredEmployees = applyFilters(employees, filters);
+  const paginatedEmployees = applyPagination(
+    filteredEmployees,
     page,
     limit
   );
-  const selectedSomeCryptoOrders =
-    selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < cryptoOrders.length;
-  const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === cryptoOrders.length;
+  const selectedSomeEmployees =
+    selectedEmployees.length > 0 &&
+    selectedEmployees.length < employees.length;
+  const selectedAllEmployees =
+    selectedEmployees.length === employees.length;
   const theme = useTheme();
+
+  const handleDeleteEmployee = async (id: string) => {
+    MySwal.fire({
+      title: 'Are you sure?',
+      text: "You won't be delete this employee!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#28a745',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await EmployeeServices.destroy(id);
+        if (res) {
+          MySwal.fire(
+            'Deleted!',
+            'Employee has been deleted.',
+            'success'
+          )
+          dispatch(deleteItem(true))
+        }
+      }
+    })
+  }
 
   return (
     <Card>
@@ -186,24 +186,26 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
         <CardHeader
           action={
             <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
+              <FormControl fullWidth sx={{ marginTop: 1 }}>
+                <InputLabel>Select Company</InputLabel>
                 <Select
-                  value={filters.status || 'all'}
-                  onChange={handleStatusChange}
-                  label="Status"
-                  autoWidth
+                  value={selectedCompany}
+                  onChange={handleSelectedCompany}
+                  input={<OutlinedInput label="Select Company" />}
                 >
-                  {statusOptions.map((statusOption) => (
-                    <MenuItem key={statusOption.id} value={statusOption.id}>
-                      {statusOption.name}
+                  {listCompany.map((company) => (
+                    <MenuItem
+                      key={company.id}
+                      value={company.id}
+                    >
+                      {company.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Box>
           }
-          title="Recent Orders"
+          title="List Employee"
         />
       )}
       <Divider />
@@ -214,38 +216,37 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
-                  onChange={handleSelectAllCryptoOrders}
+                  checked={selectedAllEmployees}
+                  indeterminate={selectedSomeEmployees}
+                  onChange={handleSelectAllEmployees}
                 />
               </TableCell>
-              <TableCell>Order Details</TableCell>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Source</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Status</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Day of Birth</TableCell>
+              <TableCell>Card ID</TableCell>
+              <TableCell align="right">Phone Number</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
-              const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.id
+            {paginatedEmployees.map((employee) => {
+              const isEmployeeSelected = selectedEmployees.includes(
+                employee.id
               );
               return (
                 <TableRow
                   hover
-                  key={cryptoOrder.id}
-                  selected={isCryptoOrderSelected}
+                  key={employee.id}
+                  selected={isEmployeeSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isCryptoOrderSelected}
+                      checked={isEmployeeSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, cryptoOrder.id)
+                        handleSelectOneEmployee(event, employee.id)
                       }
-                      value={isCryptoOrderSelected}
+                      value={isEmployeeSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -256,10 +257,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderDetails}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
+                      {employee.name}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -270,7 +268,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderID}
+                      {format(new Date(employee.dob), 'MM / dd / yyyy')}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -281,12 +279,10 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.sourceName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.sourceDesc}
+                      {employee.card_id}
                     </Typography>
                   </TableCell>
+
                   <TableCell align="right">
                     <Typography
                       variant="body1"
@@ -295,18 +291,10 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.amountCrypto}
-                      {cryptoOrder.cryptoCurrency}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {numeral(cryptoOrder.amount).format(
-                        `${cryptoOrder.currency}0,0.00`
-                      )}
+                      {employee.phone_number}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
-                  </TableCell>
+                  
                   <TableCell align="right">
                     <Tooltip title="Edit Order" arrow>
                       <IconButton
@@ -318,6 +306,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                         }}
                         color="inherit"
                         size="small"
+                        onClick={() => navigate(`/management/edit-employee/${employee.id}`)}
                       >
                         <EditTwoToneIcon fontSize="small" />
                       </IconButton>
@@ -330,6 +319,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                         }}
                         color="inherit"
                         size="small"
+                        onClick={() => handleDeleteEmployee(employee.id)}
                       >
                         <DeleteTwoToneIcon fontSize="small" />
                       </IconButton>
@@ -344,7 +334,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredCryptoOrders.length}
+          count={filteredEmployees.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -356,12 +346,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
   );
 };
 
-RecentOrdersTable.propTypes = {
-  cryptoOrders: PropTypes.array.isRequired
+ListEmployeeTable.propTypes = {
+  employees: PropTypes.array.isRequired
 };
 
-RecentOrdersTable.defaultProps = {
-  cryptoOrders: []
+ListEmployeeTable.defaultProps = {
+  employees: []
 };
 
-export default RecentOrdersTable;
+export default ListEmployeeTable;

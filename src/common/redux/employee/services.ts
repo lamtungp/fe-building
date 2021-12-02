@@ -9,7 +9,7 @@ const EmployeeServices = {
   },
 
   update: (data: any): Promise<any> => {
-    const results = AxiosClient.put('/employee', data);
+    const results = AxiosClient.put(`/employee/${data.id}`, data);
     return results;
   },
 
@@ -20,6 +20,11 @@ const EmployeeServices = {
 
   index: (): Promise<any> => {
     const results = AxiosClient.get(`/employee`);
+    return results;
+  },
+
+  list: (id: string): Promise<any> => {
+    const results = AxiosClient.get(`/employee/list/${id}`);
     return results;
   },
 

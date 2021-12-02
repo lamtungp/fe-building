@@ -26,15 +26,15 @@ import {
 import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import BulkActions from './BulkActions';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import CompanyServices from 'src/common/redux/company/services';
 import { useDispatch } from 'react-redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
+import BulkActions from 'src/components/BulkActions/BulkActions';
 
-interface RecentOrdersTableProps {
+interface ListCompanyTableProps {
   className?: string;
   companies: any[];
 }
@@ -87,7 +87,7 @@ const applyPagination = (
   return companies.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ companies }) => {
+const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -396,12 +396,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ companies }) => {
   );
 };
 
-RecentOrdersTable.propTypes = {
+ListCompanyTable.propTypes = {
   companies: PropTypes.array.isRequired
 };
 
-RecentOrdersTable.defaultProps = {
+ListCompanyTable.defaultProps = {
   companies: []
 };
 
-export default RecentOrdersTable;
+export default ListCompanyTable;

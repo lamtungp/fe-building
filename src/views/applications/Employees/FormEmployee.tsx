@@ -1,52 +1,115 @@
-import React from 'react';
-import { useFormik } from 'formik';
+import React, { ChangeEvent } from 'react';
+import { Formik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography } from '@mui/material';
+import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, FormControl, InputLabel, MenuItem, Select, OutlinedInput } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import PageHeader from './PageHeader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import EmployeeServices from 'src/common/redux/employee/services';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import DatePicker from '@mui/lab/DatePicker';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import CompanyServices from 'src/common/redux/company/services';
 
 const validationSchema = yup.object({  
   name: yup
     .string()
-    .required('Name building is required'),
-    address: yup
+    .required('Name is required'),
+  card_id: yup
     .string()
     .required('Address is required'),
-    hotline: yup
+  phone_number: yup
     .string()
-    .required('Hotline is required')
+    .required('Phone Number is required'),
 });
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
-  const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+  const { id } = useParams()
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedCompany, setSelectedCompany] = React.useState('');
 
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      address: '',
-      hotline: ''
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      handleUpdate(values)
-    },
-  });
+  const MySwal = withReactContent(Swal)
 
-  const handleUpdate = async (values: any) => {
-    values = {...values, dob: value}
-    console.log(values);
-    // await EmployeeServices.update(values)
+  const [employee, setEmployee] = React.useState({
+    name: '',
+    card_id: '',
+    phone_number: '',
+  })
+
+  const [listCompany, setListCompany] = React.useState([])
+
+  const getEmployee = async (id : string): Promise<any> => {
+    const data = await EmployeeServices.show(id);
+    setEmployee(data);
+    setSelectedDate(data.dob)
+    setSelectedCompany(data.company_id)
   }
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
+  const getListCompany = async (): Promise<any> => {
+    const data = await CompanyServices.index();
+    setListCompany(data);
+  }
+
+  React.useEffect(() => {
+    if (id) {
+      getEmployee(id);
+    }
+    getListCompany();
+  }, [])
+
+  const handleEvent = async (values: any): Promise<any> => {
+    values = {...values, dob: selectedDate, company_id: selectedCompany}
+    let res: any;
+    try {
+      if (id) {
+        res = await EmployeeServices.update(values)
+      } else {
+        res = await EmployeeServices.create(values)
+      }
+      if (res) {
+        MySwal.fire({
+          text: id ? 'Update employee successfully' : 'Create employee successfully',
+          icon: 'success',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            navigate('/management/employees')
+          }
+        })
+      } else {
+        MySwal.fire({
+          text: id ? 'Create employee fail' : 'Update employee fail',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      MySwal.fire({
+        text: error.message,
+        icon: 'error'
+      })
+    }
+  }
+
+  const handleSelectedDate = (newValue: any): void => {
+    setSelectedDate(newValue);
   };
+
+  const handleSelectedCompany = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedCompany(e.target.value)
+  }
 
   return (
     <div>
@@ -85,67 +148,103 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
               <Divider />
 
               <CardContent sx={{ p: 4, mx: 6 }}>
-                <form onSubmit={formik.handleSubmit}>
-                  <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        id="name"
-                        name="name"
-                        label="Name Building"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
-                      />
-                  </Grid>
+              <Formik
+                  initialValues={employee}
+                  validationSchema={validationSchema}
+                  enableReinitialize
+                  onSubmit={(values) => {
+                    handleEvent(values);
+                  }}
+                  validateOnChange={true}
+                >
+                  {({ handleChange, handleSubmit, errors, touched, values }) => (
+                    <form>
+                      <Grid item xs={12}>
+                        <TextField
+                            margin={'normal'}
+                            fullWidth
+                            id="name"
+                            name="name"
+                            label="Name"
+                            value={values.name}
+                            onChange={handleChange}
+                            error={touched.name && Boolean(errors.name)}
+                            helperText={touched.name && errors.name}
+                          />
+                      </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      margin={'normal'}
-                      fullWidth
-                      id="address"
-                      name="address"
-                      label="Address"
-                      value={formik.values.address}
-                      onChange={formik.handleChange}
-                      error={formik.touched.address && Boolean(formik.errors.address)}
-                      helperText={formik.touched.address && formik.errors.address}
-                    />
-                  </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin={'normal'}
+                          fullWidth
+                          id="card_id"
+                          name="card_id"
+                          label="Card ID"
+                          value={values.card_id}
+                          onChange={handleChange}
+                          error={touched.card_id && Boolean(errors.card_id)}
+                          helperText={touched.card_id && errors.card_id}
+                        />
+                      </Grid>
 
-                  <Grid item xs={12} marginTop={1}>
-                    <DesktopDatePicker
-                        label="Day of Birth"
-                        inputFormat="dd/MM/yyyy"
-                        value={value}
-                        onChange={handleChange}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                  </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin={'normal'}
+                          fullWidth
+                          id="phone_number"
+                          name="phone_number"
+                          label="Phone Number"
+                          value={values.phone_number}
+                          onChange={handleChange}
+                          error={touched.phone_number && Boolean(errors.phone_number)}
+                          helperText={touched.phone_number && errors.phone_number}
+                        />
+                      </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      margin={'normal'}
-                      fullWidth
-                      id="hotline"
-                      name="hotline"
-                      label="Hotline"
-                      value={formik.values.hotline}
-                      onChange={formik.handleChange}
-                      error={formik.touched.hotline && Boolean(formik.errors.hotline)}
-                      helperText={formik.touched.hotline && formik.errors.hotline}
-                    />
-                  </Grid>
+                      <Grid container spacing={3}>
+                        <Grid item xs={6} marginTop={1}>
+                          <DatePicker
+                              label="Day of Birth"
+                              inputFormat="dd/MM/yyyy"
+                              value={selectedDate}
+                              onChange={handleSelectedDate}
+                              renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Grid>
 
-                  <Box textAlign='center' marginTop={2} sx={{ '& > button': { m: 1 } }}>
-                    <Button color="primary" variant="outlined" onClick={() => navigate('/management/building-information')}>
-                      Back
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Submit
-                    </Button>
-                  </Box>
-                </form>
+                        <Grid item xs={6}>
+                          <FormControl fullWidth sx={{ marginTop: 1 }}>
+                            <InputLabel>Select Company</InputLabel>
+                            <Select
+                              value={selectedCompany}
+                              onChange={handleSelectedCompany}
+                              input={<OutlinedInput label="Select Company" />}
+                              MenuProps={MenuProps}
+                            >
+                              {listCompany.map((company) => (
+                                <MenuItem
+                                  key={company.id}
+                                  value={company.id}
+                                >
+                                  {company.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+
+                      <Box textAlign='center' marginTop={2} sx={{ '& > button': { m: 1 } }}>
+                        <Button color="primary" variant="outlined" onClick={() => navigate('/management/employees')}>
+                          Back
+                        </Button>
+                        <Button color="primary" variant="contained" onClick={() => handleSubmit()}>
+                          Submit
+                        </Button>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
               </CardContent>
             </Card>
           </Grid>
