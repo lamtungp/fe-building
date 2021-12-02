@@ -202,17 +202,7 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
                       </Grid>
 
                       <Grid container spacing={3}>
-                        <Grid item xs={6} marginTop={1}>
-                          <DatePicker
-                              label="Day of Birth"
-                              inputFormat="dd/MM/yyyy"
-                              value={selectedDate}
-                              onChange={handleSelectedDate}
-                              renderInput={(params) => <TextField {...params} />}
-                            />
-                        </Grid>
-
-                        <Grid item xs={6}>
+                      <Grid item xs={6}>
                           <FormControl fullWidth sx={{ marginTop: 1 }}>
                             <InputLabel>Select Company</InputLabel>
                             <Select
@@ -231,6 +221,16 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
                               ))}
                             </Select>
                           </FormControl>
+                        </Grid>
+
+                        <Grid item xs={6} marginTop={1}>
+                          <DatePicker
+                              label="Day of Birth"
+                              inputFormat="dd/MM/yyyy"
+                              value={selectedDate}
+                              onChange={handleSelectedDate}
+                              renderInput={(params) => <TextField {...params} />}
+                            />
                         </Grid>
                       </Grid>
 

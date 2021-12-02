@@ -224,7 +224,7 @@ const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
               <TableCell>Name</TableCell>
               <TableCell>Day of Birth</TableCell>
               <TableCell>Card ID</TableCell>
-              <TableCell align="right">Phone Number</TableCell>
+              <TableCell>Phone Number</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -268,7 +268,7 @@ const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
                       gutterBottom
                       noWrap
                     >
-                      {format(new Date(employee.dob), 'MM / dd / yyyy')}
+                      {format(new Date(employee.dob), 'dd-MM-yyyy')}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -283,7 +283,7 @@ const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
                     </Typography>
                   </TableCell>
 
-                  <TableCell align="right">
+                  <TableCell>
                     <Typography
                       variant="body1"
                       fontWeight="bold"
@@ -296,7 +296,7 @@ const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
                   </TableCell>
                   
                   <TableCell align="right">
-                    <Tooltip title="Edit Order" arrow>
+                    <Tooltip title="Edit Employee" arrow>
                       <IconButton
                         sx={{
                           '&:hover': {
@@ -311,7 +311,7 @@ const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
                         <EditTwoToneIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete Order" arrow>
+                    <Tooltip title="Delete Employee" arrow>
                       <IconButton
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },

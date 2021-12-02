@@ -19,12 +19,12 @@ const validationSchema = yup.object({
     .string()
     .required('Tax code is required'),
   capital: yup
-    .string()
+    .number()
     .required('Capital is required'),
   field_operation: yup
     .string()
     .required('Filed operation is required'),
-    phone_number: yup
+  phone_number: yup
     .string()
     .required('Phone number is required')
 });

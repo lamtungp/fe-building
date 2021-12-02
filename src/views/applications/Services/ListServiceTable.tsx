@@ -1,4 +1,5 @@
-import { FC, ChangeEvent, useState } from 'react';
+import { FC, ChangeEvent, useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -16,23 +17,24 @@ import {
   TableContainer,
   Typography,
   useTheme,
-  CardHeader
+  CardHeader,
+  OutlinedInput
 } from '@mui/material';
 
 import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { useNavigate } from 'react-router-dom';
+import BulkActions from 'src/components/BulkActions/BulkActions';
+import { useDispatch } from 'react-redux';
+import { deleteItem, selectCompany } from 'src/common/redux/table/Actions';
+import serviceservices from 'src/common/redux/employee/services';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import CompanyServices from 'src/common/redux/company/services';
-import { useDispatch } from 'react-redux';
-import { deleteItem } from 'src/common/redux/table/Actions';
-import BulkActions from 'src/components/BulkActions/BulkActions';
+import { useNavigate } from 'react-router-dom';
 
-interface ListCompanyTableProps {
+interface ListServiceTableProps {
   className?: string;
-  companies: any[];
+  services: any[];
 }
 
 interface Filters {
@@ -40,13 +42,13 @@ interface Filters {
 }
 
 const applyFilters = (
-  companies: any[],
+  services: any[],
   filters: Filters
 ): any[] => {
-  return companies.filter((company) => {
+  return services.filter((serviceStatus) => {
     let matches = true;
 
-    if (filters.status && company.status !== filters.status) {
+    if (filters.status && serviceStatus.status !== filters.status) {
       matches = false;
     }
 
@@ -55,51 +57,50 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  companies: any[],
+  services: any[],
   page: number,
   limit: number
 ): any[] => {
-  return companies.slice(page * limit, page * limit + limit);
+  return services.slice(page * limit, page * limit + limit);
 };
 
-const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
+const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const MySwal = withReactContent(Swal)
-
-  const [selectedCompanies, setselectedCompanies] = useState<string[]>(
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  
+  const [selectedServices, setSelectedServices] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedCompanies.length > 0;
+  const selectedBulkActions = selectedServices.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
 
-  const handleSelectAllCompanies = (
+  const handleSelectAllservices = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setselectedCompanies(
+    setSelectedServices(
       event.target.checked
-        ? companies.map((company) => company.id)
+        ? services.map((employee) => employee.id)
         : []
     );
   };
 
-  const handleSelectOneCompany = (
+  const handleSelectOneEmployee = (
     event: ChangeEvent<HTMLInputElement>,
-    companyId: string
+    servicesId: string
   ): void => {
-    if (!selectedCompanies.includes(companyId)) {
-      setselectedCompanies((prevSelected) => [
+    if (!selectedServices.includes(servicesId)) {
+      setSelectedServices((prevSelected) => [
         ...prevSelected,
-        companyId
+        servicesId
       ]);
     } else {
-      setselectedCompanies((prevSelected) =>
-        prevSelected.filter((id) => id !== companyId)
+      setSelectedServices((prevSelected) =>
+        prevSelected.filter((id) => id !== servicesId)
       );
     }
   };
@@ -112,10 +113,23 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const handleDeleteCompany = async (id: string) => {
+  const filteredServices = applyFilters(services, filters);
+  const paginatedServices = applyPagination(
+    filteredServices,
+    page,
+    limit
+  );
+  const selectedSomeServices =
+    selectedServices.length > 0 &&
+    selectedServices.length < services.length;
+  const selectedAllServices =
+    selectedServices.length === services.length;
+  const theme = useTheme();
+
+  const handleDeleteEmployee = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this company!",
+      text: "You won't be delete this employee!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -123,11 +137,11 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await CompanyServices.destroy(id);
+        const res = await serviceservices.destroy(id);
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Company has been deleted.',
+            'Employee has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -135,19 +149,6 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
       }
     })
   }
-
-  const filteredCompanys = applyFilters(companies, filters);
-  const paginatedCompanys = applyPagination(
-    filteredCompanys,
-    page,
-    limit
-  );
-  const selectedSomeCompanies =
-    selectedCompanies.length > 0 &&
-    selectedCompanies.length < companies.length;
-  const selectedAllCompanies =
-    selectedCompanies.length === companies.length;
-  const theme = useTheme();
 
   return (
     <Card>
@@ -157,7 +158,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader title="List company" />
+        <CardHeader title="Services" />
       )}
       <Divider />
       <TableContainer>
@@ -167,38 +168,36 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCompanies}
-                  indeterminate={selectedSomeCompanies}
-                  onChange={handleSelectAllCompanies}
+                  checked={selectedAllServices}
+                  indeterminate={selectedSomeServices}
+                  onChange={handleSelectAllservices}
                 />
               </TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Tax Code</TableCell>
-              <TableCell>Authorized Capital</TableCell>
-              <TableCell>Field Operation</TableCell>
-              <TableCell>Phone Number</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Unit Price</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCompanys.map((company) => {
-              const iscompanySelected = selectedCompanies.includes(
-                company.id
+            {paginatedServices.map((service) => {
+              const isServiceSelected = selectedServices.includes(
+                service.id
               );
               return (
                 <TableRow
                   hover
-                  key={company.id}
-                  selected={iscompanySelected}
+                  key={service.id}
+                  selected={isServiceSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={iscompanySelected}
+                      checked={isServiceSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCompany(event, company.id)
+                        handleSelectOneEmployee(event, service.id)
                       }
-                      value={iscompanySelected}
+                      value={isServiceSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -209,12 +208,10 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
                       gutterBottom
                       noWrap
                     >
-                      {company.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                     
+                      {service.name}
                     </Typography>
                   </TableCell>
+
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -223,12 +220,10 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
                       gutterBottom
                       noWrap
                     >
-                      {company.tax_code}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                     
+                      {service.type}
                     </Typography>
                   </TableCell>
+
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -237,36 +232,15 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
                       gutterBottom
                       noWrap
                     >
-                      {company.capital} 
+                      {service.unit_price}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {company.field_operation}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {company.phone_number}
-                    </Typography>
-                  </TableCell>
+                  
                   <TableCell align="right">
-                    <Tooltip title="Edit Company" arrow>
+                    <Tooltip title="Edit Service" arrow>
                       <IconButton
                         sx={{
                           '&:hover': {
@@ -276,12 +250,12 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
                         }}
                         color="inherit"
                         size="small"
-                        onClick={() => navigate(`/management/edit-company/${company.id}`)}
+                        onClick={() => navigate(`/management/edit-service/${service.id}`)}
                       >
                         <EditTwoToneIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete Company" arrow>
+                    <Tooltip title="Delete Service" arrow>
                       <IconButton
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },
@@ -289,7 +263,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
                         }}
                         color="inherit"
                         size="small"
-                        onClick={() => handleDeleteCompany(company.id)}
+                        onClick={() => handleDeleteEmployee(service.id)}
                       >
                         <DeleteTwoToneIcon fontSize="small" />
                       </IconButton>
@@ -304,24 +278,24 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredCompanys.length}
+          count={filteredServices.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
           rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 15]}
+          rowsPerPageOptions={[5, 10, 25, 30]}
         />
       </Box>
     </Card>
   );
 };
 
-ListCompanyTable.propTypes = {
-  companies: PropTypes.array.isRequired
+ListServiceTable.propTypes = {
+  services: PropTypes.array.isRequired
 };
 
-ListCompanyTable.defaultProps = {
-  companies: []
+ListServiceTable.defaultProps = {
+  services: []
 };
 
-export default ListCompanyTable;
+export default ListServiceTable;

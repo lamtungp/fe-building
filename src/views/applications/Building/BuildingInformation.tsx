@@ -76,7 +76,7 @@ const BuildingInformation: React.FunctionComponent = (): React.ReactElement => {
                 <Grid item xs={12} sm={8} md={8}>
                 <Box sx={{ maxWidth: { xs: 'auto', sm: 300 } }}>
                     <Text color="black">
-                      {building.address}
+                      <b>{building.address}</b>
                     </Text>
                   </Box>
                 </Grid>

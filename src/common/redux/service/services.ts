@@ -9,7 +9,7 @@ const SvServices = {
   },
 
   update: (data: any): Promise<any> => {
-    const results = AxiosClient.put('/service', data);
+    const results = AxiosClient.put(`/service/${data.id}`, data);
     return results;
   },
 
