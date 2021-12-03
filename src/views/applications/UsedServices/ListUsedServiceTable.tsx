@@ -20,12 +20,13 @@ import {
   CardHeader,
 } from '@mui/material';
 
+import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
 import { useDispatch } from 'react-redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
-import SvServices from 'src/common/redux/service/services';
+import UsedSvServices from 'src/common/redux/used_service/services';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
@@ -63,7 +64,7 @@ const applyPagination = (
   return services.slice(page * limit, page * limit + limit);
 };
 
-const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
+const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const MySwal = withReactContent(Swal)
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -136,7 +137,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await SvServices.destroy(id);
+        const res = await UsedSvServices.destroy(id);
         if (res) {
           MySwal.fire(
             'Deleted!',
@@ -172,21 +173,21 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                   onChange={handleSelectAllservices}
                 />
               </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Unit Price</TableCell>
+              <TableCell>Company</TableCell>
+              <TableCell>Service</TableCell>
+              <TableCell>Total Price</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedServices.map((service) => {
+            {paginatedServices.map((used_service) => {
               const isServiceSelected = selectedServices.includes(
-                service.id
+                used_service.id
               );
               return (
                 <TableRow
                   hover
-                  key={service.id}
+                  key={used_service.id}
                   selected={isServiceSelected}
                 >
                   <TableCell padding="checkbox">
@@ -194,7 +195,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       color="primary"
                       checked={isServiceSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEmployee(event, service.id)
+                        handleSelectOneEmployee(event, used_service.id)
                       }
                       value={isServiceSelected}
                     />
@@ -207,7 +208,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {service.name}
+                      {used_service.company.name}
                     </Typography>
                   </TableCell>
 
@@ -219,7 +220,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {service.type}
+                      {used_service.service.name}
                     </Typography>
                   </TableCell>
 
@@ -231,7 +232,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {service.unit_price}
+                      {used_service.service.unit_price}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
@@ -239,35 +240,38 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                   </TableCell>
                   
                   <TableCell align="right">
-                    <Tooltip title="Edit Service" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                        onClick={() => navigate(`/management/edit-service/${service.id}`)}
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    { service.name === ServiceEnums.SECURITY || service.name === ServiceEnums.CLEANING ? <></> 
-                      : <Tooltip title="Delete Service" arrow>
-                        <IconButton
-                          sx={{
-                            '&:hover': { background: theme.colors.error.lighter },
-                            color: theme.palette.error.main
-                          }}
-                          color="inherit"
-                          size="small"
-                          onClick={() => handleDeleteEmployee(service.id)}
-                        >
-                          <DeleteTwoToneIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>  
+                    
+                      <>
+                        <Tooltip title="Details" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': {
+                                background: theme.colors.primary.lighter
+                              },
+                              color: theme.palette.primary.main
+                            }}
+                            color="inherit"
+                            size="small"
+                            onClick={() => navigate(`/statistics/edit-used-service/${used_service.id}`)}
+                          >
+                            <EditTwoToneIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </> 
+                    { (used_service.name === ServiceEnums.SECURITY || used_service.name === ServiceEnums.SECURITY) ?
+                      <Tooltip title="Delete" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': { background: theme.colors.error.lighter },
+                              color: theme.palette.error.main
+                            }}
+                            color="inherit"
+                            size="small"
+                            onClick={() => handleDeleteEmployee(used_service.id)}
+                          >
+                            <DeleteTwoToneIcon fontSize="small" />
+                          </IconButton>
+                      </Tooltip>: <></> 
                     }
                   </TableCell>
                 </TableRow>
@@ -291,12 +295,12 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   );
 };
 
-ListServiceTable.propTypes = {
+ListUsedServiceTable.propTypes = {
   services: PropTypes.array.isRequired
 };
 
-ListServiceTable.defaultProps = {
+ListUsedServiceTable.defaultProps = {
   services: []
 };
 
-export default ListServiceTable;
+export default ListUsedServiceTable;

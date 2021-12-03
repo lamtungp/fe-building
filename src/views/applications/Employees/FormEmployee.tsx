@@ -202,7 +202,7 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
                       </Grid>
 
                       <Grid container spacing={3}>
-                      <Grid item xs={6}>
+                        <Grid item xs={6}>
                           <FormControl fullWidth sx={{ marginTop: 1 }}>
                             <InputLabel>Select Company</InputLabel>
                             <Select

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 const baseURL = process.env.REACT_APP_END_POINT;
 
@@ -31,6 +32,7 @@ AxiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error);
     throw Error(error);
   }
 );

@@ -20,12 +20,15 @@ const Building = Loader(lazy(() => import('src/views/applications/Building')));
 const Employees = Loader(lazy(() => import('src/views/applications/Employees')));
 const Staffs = Loader(lazy(() => import('src/views/applications/Staffs')));
 const Companies = Loader(lazy(() => import('src/views/applications/Companies')));
+const UsedServices = Loader(lazy(() => import('src/views/applications/UsedServices')));
 
 const FormBuilding = Loader(lazy(() => import('src/views/applications/Building/FormBuilding')));
 const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/FormCompany')));
 const FormStaff = Loader(lazy(() => import('src/views/applications/Staffs/FormStaff')));
 const FormEmployee = Loader(lazy(() => import('src/views/applications/Employees/FormEmployee')));
 const FormService = Loader(lazy(() => import('src/views/applications/Services/FormService')));
+const FormUsedService = Loader(lazy(() => import('src/views/applications/UsedServices/FormUsedService')));
+
 
 
 // const UserProfile = Loader(lazy(() => import('src/content/applications/Users/profile')));
@@ -83,7 +86,7 @@ const routes: PartialRouteObject[] = [
         path: '/',
         element: (
           <Navigate
-            to="/management/building-information"
+            to="building-information"
             replace
           />
         )
@@ -142,6 +145,36 @@ const routes: PartialRouteObject[] = [
       },
     ]
   },
+
+  {
+    path: 'statistics',
+    element: (
+      <SidebarLayout />
+    ),
+    children: [
+      {
+        path: '/',
+        element: (
+          <Navigate
+            to="used-services"
+            replace
+          />
+        )
+      },
+      {
+        path: 'used-services',
+        element: <UsedServices />
+      },
+      {
+        path: 'edit-used-service/:id',
+        element: <FormUsedService />
+      },
+      {
+        path: 'add-used-service',
+        element: <FormUsedService />
+      },
+    ]
+  }
 ];
 
 export default routes;

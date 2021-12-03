@@ -2,24 +2,24 @@ import AxiosClient from '../../utils/axiosClient';
 
 // import { UpdateParams } from './ActionTypes';
 
-const SvServices = {
+const UsedSvServices = {
   create: (data: any): Promise<any> => {
-    const results = AxiosClient.post('/service', data);
+    const results = AxiosClient.post('/used_service', data);
     return results;
   },
 
-  update: (data: any): Promise<any> => {
-    const results = AxiosClient.put(`/service/${data.id}`, data);
+  update: (data: any, id: string): Promise<any> => {
+    const results = AxiosClient.put(`/used_service/${id}`, data);
     return results;
   },
 
   show: (id: string): Promise<any> => {
-    const results = AxiosClient.get(`/service/${id}`);
+    const results = AxiosClient.get(`/used_service/${id}`);
     return results;
   },
 
   index: (): Promise<any> => {
-    const results = AxiosClient.get(`/service`);
+    const results = AxiosClient.get(`/used_service`);
     return results;
   },
 
@@ -29,9 +29,9 @@ const SvServices = {
   },
 
   destroy: (id: string): Promise<any> => {
-    const results = AxiosClient.delete(`/service/${id}`);
+    const results = AxiosClient.delete(`/used_service/${id}`);
     return results;
   }
 };
 
-export default SvServices;
+export default UsedSvServices;

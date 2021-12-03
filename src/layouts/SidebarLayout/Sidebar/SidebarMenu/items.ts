@@ -58,6 +58,16 @@ const menuItems: MenuItems[] = [
         link: '/management/services'
       }
     ]
+  },
+  {
+    heading: 'Statistics',
+    items: [
+      {
+        name: 'Used Services',
+        icon: MiscellaneousServicesIcon,
+        link: '/statistics/used-services'
+      }
+    ]
   }
 ];
 
