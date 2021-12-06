@@ -1,5 +1,4 @@
-import { FC, ChangeEvent, useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -30,6 +29,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
 import { ServiceEnums } from 'src/common/enums';
+import { numberToString } from 'src/common/utils/transformPrice';
 
 interface ListServiceTableProps {
   className?: string;
@@ -78,7 +78,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     status: null
   });
 
-  const handleSelectAllservices = (
+  const handleSelectAllServices = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
     setSelectedServices(
@@ -88,7 +88,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     );
   };
 
-  const handleSelectOneEmployee = (
+  const handleSelectOneService = (
     event: ChangeEvent<HTMLInputElement>,
     servicesId: string
   ): void => {
@@ -125,10 +125,10 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     selectedServices.length === services.length;
   const theme = useTheme();
 
-  const handleDeleteEmployee = async (id: string) => {
+  const handleDeleteService = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this employee!",
+      text: "You won't be delete this service!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -140,7 +140,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Employee has been deleted.',
+            'Service has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -169,7 +169,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                   color="primary"
                   checked={selectedAllServices}
                   indeterminate={selectedSomeServices}
-                  onChange={handleSelectAllservices}
+                  onChange={handleSelectAllServices}
                 />
               </TableCell>
               <TableCell>Name</TableCell>
@@ -194,7 +194,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       color="primary"
                       checked={isServiceSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEmployee(event, service.id)
+                        handleSelectOneService(event, service.id)
                       }
                       value={isServiceSelected}
                     />
@@ -231,7 +231,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {service.unit_price}
+                      {numberToString(service.unit_price)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
@@ -263,7 +263,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                           }}
                           color="inherit"
                           size="small"
-                          onClick={() => handleDeleteEmployee(service.id)}
+                          onClick={() => handleDeleteService(service.id)}
                         >
                           <DeleteTwoToneIcon fontSize="small" />
                         </IconButton>

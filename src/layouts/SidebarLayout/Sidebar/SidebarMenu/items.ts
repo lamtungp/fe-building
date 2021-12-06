@@ -5,6 +5,7 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import HomeIcon from '@mui/icons-material/Home';
+import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -36,6 +37,11 @@ const menuItems: MenuItems[] = [
         name: 'Building information',
         icon: HomeWorkIcon,
         link: '/management/building-information'
+      },
+      {
+        name: 'Floors',
+        icon: RoomPreferencesIcon,
+        link: '/management/floors'
       },
       {
         name: 'Employees',

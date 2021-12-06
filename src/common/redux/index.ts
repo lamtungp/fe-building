@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { all } from 'redux-saga/effects';
 
 // Import all reducers here
 import companyReducer, { CompanyState } from './company/reducer';

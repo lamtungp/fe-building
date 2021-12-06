@@ -16,6 +16,7 @@ const Loader = (Component: any) => (props: any) => (
 // Applications
 
 const Services = Loader(lazy(() => import('src/views/applications/Services')));
+const Floors = Loader(lazy(() => import('src/views/applications/Floors')));
 const Building = Loader(lazy(() => import('src/views/applications/Building')));
 const Employees = Loader(lazy(() => import('src/views/applications/Employees')));
 const Staffs = Loader(lazy(() => import('src/views/applications/Staffs')));
@@ -27,6 +28,7 @@ const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/F
 const FormStaff = Loader(lazy(() => import('src/views/applications/Staffs/FormStaff')));
 const FormEmployee = Loader(lazy(() => import('src/views/applications/Employees/FormEmployee')));
 const FormService = Loader(lazy(() => import('src/views/applications/Services/FormService')));
+const FormFloor = Loader(lazy(() => import('src/views/applications/Floors/FormFloor')));
 const FormUsedService = Loader(lazy(() => import('src/views/applications/UsedServices/FormUsedService')));
 
 
@@ -142,6 +144,18 @@ const routes: PartialRouteObject[] = [
       {
         path: 'edit-service/:id',
         element: <FormService />
+      },
+      {
+        path: 'floors',
+        element: <Floors />
+      },
+      {
+        path: 'add-floor',
+        element: <FormFloor />
+      },
+      {
+        path: 'edit-floor/:id',
+        element: <FormFloor />
       },
     ]
   },

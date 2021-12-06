@@ -25,7 +25,6 @@ import {
   OutlinedInput
 } from '@mui/material';
 
-import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';

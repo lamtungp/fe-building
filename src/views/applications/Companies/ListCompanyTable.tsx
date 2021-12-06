@@ -19,7 +19,6 @@ import {
   CardHeader
 } from '@mui/material';
 
-import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useNavigate } from 'react-router-dom';

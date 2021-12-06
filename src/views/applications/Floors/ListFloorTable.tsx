@@ -1,4 +1,5 @@
-import { FC, ChangeEvent, useState } from 'react';
+import { FC, ChangeEvent, useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -17,8 +18,13 @@ import {
   Typography,
   useTheme,
   CardHeader,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@mui/material';
 
+import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
@@ -31,9 +37,9 @@ import { useNavigate } from 'react-router-dom';
 import { ServiceEnums } from 'src/common/enums';
 import { numberToString } from 'src/common/utils/transformPrice';
 
-interface ListServiceTableProps {
+interface ListFloorTableProps {
   className?: string;
-  services: any[];
+  floors: any[];
 }
 
 interface Filters {
@@ -56,52 +62,97 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  services: any[],
+  floors: any[],
   page: number,
   limit: number
 ): any[] => {
-  return services.slice(page * limit, page * limit + limit);
+  return floors.slice(page * limit, page * limit + limit);
 };
 
-const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
+const getStatusLabel = (floorStatus: any): JSX.Element => {
+  const map = {
+    available: {
+      text: 'Available',
+      color: 'success'
+    },
+    unavailable: {
+      text: 'Unavailable',
+      color: 'error'
+    }
+  };
+
+  const { text, color }: any = map[floorStatus];
+
+  return <Label color={color}>{text}</Label>;
+};
+
+const ListFloorTable: FC<ListFloorTableProps> = ({ floors }) => {
   const MySwal = withReactContent(Swal)
   const dispatch = useDispatch();
   const navigate = useNavigate()
   
-  const [selectedServices, setSelectedServices] = useState<string[]>(
+  const [selectedFloors, setSelectedFloors] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedServices.length > 0;
+  const selectedBulkActions = selectedFloors.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
 
-  const handleSelectAllUsedServices = (
+  const statusOptions = [
+    {
+      id: 'all',
+      name: 'All'
+    },
+    {
+      id: 'available',
+      name: 'Available'
+    },
+    {
+      id: 'unavailable',
+      name: 'Unavailable'
+    },
+  ];
+
+  const handleSelectAllFloors = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedServices(
+    setSelectedFloors(
       event.target.checked
-        ? services.map((employee) => employee.id)
+        ? floors.map((employee) => employee.id)
         : []
     );
   };
 
-  const handleSelectOneUsedService = (
+  const handleSelectOneFloor = (
     event: ChangeEvent<HTMLInputElement>,
-    servicesId: string
+    floorId: string
   ): void => {
-    if (!selectedServices.includes(servicesId)) {
-      setSelectedServices((prevSelected) => [
+    if (!selectedFloors.includes(floorId)) {
+      setSelectedFloors((prevSelected) => [
         ...prevSelected,
-        servicesId
+        floorId
       ]);
     } else {
-      setSelectedServices((prevSelected) =>
-        prevSelected.filter((id) => id !== servicesId)
+      setSelectedFloors((prevSelected) =>
+        prevSelected.filter((id) => id !== floorId)
       );
     }
+  };
+
+  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    let value = null;
+
+    if (e.target.value !== 'all') {
+      value = e.target.value;
+    }
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      status: value
+    }));
   };
 
   const handlePageChange = (event: any, newPage: number): void => {
@@ -112,23 +163,23 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredServices = applyFilters(services, filters);
-  const paginatedServices = applyPagination(
-    filteredServices,
+  const filteredFloors = applyFilters(floors, filters);
+  const paginatedFloors = applyPagination(
+    filteredFloors,
     page,
     limit
   );
-  const selectedSomeServices =
-    selectedServices.length > 0 &&
-    selectedServices.length < services.length;
-  const selectedAllServices =
-    selectedServices.length === services.length;
+  const selectedSomeFloors =
+    selectedFloors.length > 0 &&
+    selectedFloors.length < floors.length;
+  const selectedAllFloors =
+    selectedFloors.length === floors.length;
   const theme = useTheme();
 
-  const handleDeleteUsedService = async (id: string) => {
+  const handleDeleteFloor = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this used service!",
+      text: "You won't be delete this Floor!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -140,7 +191,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Used Service has been deleted.',
+            'Floor has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -157,7 +208,28 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader title="Services" />
+        <CardHeader
+          action={
+            <Box width={150}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={filters.status || 'all'}
+                  onChange={handleStatusChange}
+                  label="Status"
+                  autoWidth
+                >
+                  {statusOptions.map((statusOption) => (
+                    <MenuItem key={statusOption.id} value={statusOption.id}>
+                      {statusOption.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          }
+          title="List Floor" 
+        />
       )}
       <Divider />
       <TableContainer>
@@ -167,36 +239,37 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllServices}
-                  indeterminate={selectedSomeServices}
-                  onChange={handleSelectAllUsedServices}
+                  checked={selectedAllFloors}
+                  indeterminate={selectedSomeFloors}
+                  onChange={handleSelectAllFloors}
                 />
               </TableCell>
-              <TableCell>Company</TableCell>
-              <TableCell>Service</TableCell>
-              <TableCell>Total Price</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Floor Area</TableCell>
+              <TableCell>Unit Price</TableCell>
+              <TableCell align="center">Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedServices.map((used_service) => {
-              const isServiceSelected = selectedServices.includes(
-                used_service.id
+            {paginatedFloors.map((floor) => {
+              const isFloorSelected = selectedFloors.includes(
+                floor.id
               );
               return (
                 <TableRow
                   hover
-                  key={used_service.id}
-                  selected={isServiceSelected}
+                  key={floor.id}
+                  selected={isFloorSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isServiceSelected}
+                      checked={isFloorSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneUsedService(event, used_service.id)
+                        handleSelectOneFloor(event, floor.id)
                       }
-                      value={isServiceSelected}
+                      value={isFloorSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -207,7 +280,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.company.name}
+                      {floor.name}
                     </Typography>
                   </TableCell>
 
@@ -219,7 +292,10 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.name}
+                      {numberToString(floor.floor_area)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      m2
                     </Typography>
                   </TableCell>
 
@@ -231,33 +307,34 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {numberToString(used_service.service.unit_price)}
+                      {numberToString(floor.unit_price)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
                     </Typography>
                   </TableCell>
+
+                  <TableCell align="center">
+                    {getStatusLabel(floor.status)}
+                  </TableCell>
                   
                   <TableCell align="right">
-                    
-                      <>
-                        <Tooltip title="Details" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': {
-                                background: theme.colors.primary.lighter
-                              },
-                              color: theme.palette.primary.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => navigate(`/statistics/edit-used-service/${used_service.id}`)}
-                          >
-                            <EditTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </> 
-                    { (used_service.name === ServiceEnums.SECURITY || used_service.name === ServiceEnums.SECURITY) ?
+                    <Tooltip title="Details" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': {
+                            background: theme.colors.primary.lighter
+                          },
+                          color: theme.palette.primary.main
+                        }}
+                        color="inherit"
+                        size="small"
+                        onClick={() => navigate(`/management/edit-floor/${floor.id}`)}
+                      >
+                        <EditTwoToneIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    {( floor.name === ServiceEnums.SECURITY || floor.name === ServiceEnums.SECURITY ) ?
                       <Tooltip title="Delete" arrow>
                           <IconButton
                             sx={{
@@ -266,7 +343,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                             }}
                             color="inherit"
                             size="small"
-                            onClick={() => handleDeleteUsedService(used_service.id)}
+                            onClick={() => handleDeleteFloor(floor.id)}
                           >
                             <DeleteTwoToneIcon fontSize="small" />
                           </IconButton>
@@ -282,7 +359,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredServices.length}
+          count={filteredFloors.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -294,12 +371,12 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   );
 };
 
-ListUsedServiceTable.propTypes = {
-  services: PropTypes.array.isRequired
+ListFloorTable.propTypes = {
+  floors: PropTypes.array.isRequired
 };
 
-ListUsedServiceTable.defaultProps = {
-  services: []
+ListFloorTable.defaultProps = {
+  floors: []
 };
 
-export default ListUsedServiceTable;
+export default ListFloorTable;

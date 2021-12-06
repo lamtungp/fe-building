@@ -1,4 +1,5 @@
-import { FC, ChangeEvent, useState } from 'react';
+import { FC, ChangeEvent, useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -19,6 +20,7 @@ import {
   CardHeader,
 } from '@mui/material';
 
+import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
@@ -29,7 +31,6 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
 import { ServiceEnums } from 'src/common/enums';
-import { numberToString } from 'src/common/utils/transformPrice';
 
 interface ListServiceTableProps {
   className?: string;
@@ -78,7 +79,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     status: null
   });
 
-  const handleSelectAllUsedServices = (
+  const handleSelectAllservices = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
     setSelectedServices(
@@ -88,7 +89,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     );
   };
 
-  const handleSelectOneUsedService = (
+  const handleSelectOneEmployee = (
     event: ChangeEvent<HTMLInputElement>,
     servicesId: string
   ): void => {
@@ -125,10 +126,10 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     selectedServices.length === services.length;
   const theme = useTheme();
 
-  const handleDeleteUsedService = async (id: string) => {
+  const handleDeleteEmployee = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this used service!",
+      text: "You won't be delete this employee!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -140,7 +141,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Used Service has been deleted.',
+            'Employee has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -169,7 +170,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                   color="primary"
                   checked={selectedAllServices}
                   indeterminate={selectedSomeServices}
-                  onChange={handleSelectAllUsedServices}
+                  onChange={handleSelectAllservices}
                 />
               </TableCell>
               <TableCell>Company</TableCell>
@@ -194,7 +195,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       color="primary"
                       checked={isServiceSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneUsedService(event, used_service.id)
+                        handleSelectOneEmployee(event, used_service.id)
                       }
                       value={isServiceSelected}
                     />
@@ -231,7 +232,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {numberToString(used_service.service.unit_price)}
+                      {used_service.service.unit_price}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
@@ -266,7 +267,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                             }}
                             color="inherit"
                             size="small"
-                            onClick={() => handleDeleteUsedService(used_service.id)}
+                            onClick={() => handleDeleteEmployee(used_service.id)}
                           >
                             <DeleteTwoToneIcon fontSize="small" />
                           </IconButton>

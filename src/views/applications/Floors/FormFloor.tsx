@@ -1,45 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment } from '@mui/material';
+import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import PageHeader from './PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
-import SvServices from 'src/common/redux/service/services';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { numberToString } from 'src/common/utils/transformPrice';
+import FloorServices from 'src/common/redux/floor/services';
 
-const validationSchema = yup.object({  
-  name: yup
-    .string()
-    .required('Name building is required'),
-  type: yup
-    .string()
-    .required('Address is required'),
-  unit_price: yup
-    .number()
-    .required('Hotline is required')
-});
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
-const FormService: React.FunctionComponent = (): React.ReactElement => {
+const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal)
   
   const { id } = useParams();
 
-  const [service, setService] = useState({
+  const [floor, setFloor] = useState({
     name: '',
-    type: '',
-    unit_price: ''
+    floor_area: 0,
+    unit_price: 0
   })
 
-  const getService = async (id: string) => {
+  const statusOptions = [
+    {
+      id: 'available',
+      name: 'Available'
+    },
+    {
+      id: 'unavailable',
+      name: 'Unavailable'
+    },
+  ]
+
+  const [selectedStatus, setSelectedStatus] = useState('')
+
+  const getFloor = async (id: string) => {
     try {
-      const data = await SvServices.show(id)
-      setService(data);
+      const data = await FloorServices.show(id)
+      setFloor(data);
+      setSelectedStatus(data.status)
     } catch (error) {
       console.log(error.message)
     }
@@ -47,30 +59,35 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getService(id);
+      getFloor(id);
     }
   }, [])
 
+  const handleSelectedStatus = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedStatus(e.target.value)
+  }
+
   const handleEvent = async (values: any) => {
+    values.status = selectedStatus; 
     let res: any;
     try {
       if (id) {
-        res = await SvServices.update(values)
+        res = await FloorServices.update(values, id)
       } else {
-        res = await SvServices.create(values)
+        res = await FloorServices.create(values)
       }
       if (res) {
         MySwal.fire({
-          text: id ? 'Update service successfully' : 'Create service successfully',
+          text: id ? 'Update floor successfully' : 'Add floor successfully',
           icon: 'success',
         }).then(async (result) => {
           if (result.isConfirmed) {
-            navigate('/management/services')
+            navigate('/management/floors')
           }
         })
       } else {
         MySwal.fire({
-          text: id ? 'Create service fail' : 'Update service fail',
+          text: id ? 'Add floor fail' : 'Update floor fail',
           icon: 'error'
         })
       }
@@ -80,7 +97,6 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
         icon: 'error'
       })
     }
-    // await BuildingServices.update(values)
   }
 
   return (
@@ -121,15 +137,14 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
 
               <CardContent sx={{ p: 4, mx: 6 }}>
                 <Formik
-                    initialValues={service}
-                    validationSchema={validationSchema}
-                    enableReinitialize
-                    onSubmit={(values) => {
-                      handleEvent(values);
-                    }}
-                    validateOnChange={true}
-                  >
-                    {({ handleChange, handleSubmit, errors, touched, values }) => (
+                  initialValues={floor}
+                  enableReinitialize
+                  onSubmit={(values) => {
+                    handleEvent(values);
+                  }}
+                  validateOnChange={true}
+                >
+                  {({ handleSubmit, handleChange, errors, touched, values }) => (
                     <form>
                       <Grid item xs={12}>
                         <TextField
@@ -137,7 +152,7 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
                             fullWidth
                             id="name"
                             name="name"
-                            label="Name Service"
+                            label="Name Floor"
                             value={values.name}
                             onChange={handleChange}
                             error={touched.name && Boolean(errors.name)}
@@ -149,13 +164,16 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
                         <TextField
                           margin={'normal'}
                           fullWidth
-                          id="type"
-                          name="type"
-                          label="Type"
-                          value={values.type}
+                          id="floor_area"
+                          name="floor_area"
+                          label="Floor Area"
+                          value={values.floor_area}
                           onChange={handleChange}
-                          error={touched.type && Boolean(errors.type)}
-                          helperText={touched.type && errors.type}
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">m2</InputAdornment>,
+                          }}
+                          error={touched.floor_area && Boolean(errors.floor_area)}
+                          helperText={touched.floor_area && errors.floor_area}
                         />
                       </Grid>
 
@@ -176,8 +194,29 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
                         />
                       </Grid>
 
+                      <Grid item xs={6}>
+                          <FormControl margin='normal' fullWidth>
+                            <InputLabel>Status</InputLabel>
+                            <Select
+                              value={selectedStatus}
+                              onChange={handleSelectedStatus}
+                              input={<OutlinedInput label="Status" />}
+                              MenuProps={MenuProps}
+                            >
+                              {statusOptions.map((status) => (
+                                <MenuItem
+                                  key={status.id}
+                                  value={status.id}
+                                >
+                                  {status.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+
                       <Box textAlign='center' marginTop={2} sx={{ '& > button': { m: 1 } }}>
-                        <Button color="primary" variant="outlined" onClick={() => navigate('/management/services')}>
+                        <Button color="primary" variant="outlined" onClick={() => navigate('/management/floors')}>
                           Back
                         </Button>
                         <Button color="primary" variant="contained" onClick={() => handleSubmit()}>
@@ -197,4 +236,4 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
   );
 };
 
-export default FormService;
+export default FormUsedService;
