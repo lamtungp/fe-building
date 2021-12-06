@@ -74,7 +74,8 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
     }
     getListService();
     getListCompany();
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   const handleSelectedService = (e: ChangeEvent<HTMLInputElement>): void => {
     setSelectedService(e.target.value)
@@ -120,7 +121,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   return (
     <div>
       <Helmet>
-        <title>Form Service</title>
+        <title>Form Used Service</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />

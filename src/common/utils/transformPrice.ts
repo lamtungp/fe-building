@@ -4,7 +4,7 @@ export const numberToString = (price: number): string => {
   }
   let str = '';
 
-  while (price / 1000 > 1) {
+  while (price / 1000 >= 1) {
     if (price % 1000 === 0) {
       str = str.concat(' 000');
     } else {

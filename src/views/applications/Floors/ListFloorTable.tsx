@@ -1,5 +1,4 @@
-import { FC, ChangeEvent, useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -295,7 +294,7 @@ const ListFloorTable: FC<ListFloorTableProps> = ({ floors }) => {
                       {numberToString(floor.floor_area)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      m2
+                      m<sup>2</sup>
                     </Typography>
                   </TableCell>
 

@@ -27,7 +27,7 @@ const ListService: React.FunctionComponent = (): React.ReactElement => {
   useEffect(() => {
     getListService();
     dispatch(deleteItem(false));
-  }, [isDelete])
+  }, [isDelete, dispatch])
 
   return (
     <Card>

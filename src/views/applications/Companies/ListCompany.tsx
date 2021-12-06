@@ -22,7 +22,7 @@ const ListCompany: React.FunctionComponent = (): React.ReactElement => {
   React.useEffect(() => {
     getListCompany();
     dispatch(deleteItem(false));
-  }, [isDelete])
+  }, [isDelete, dispatch])
 
   return (
     <Card>

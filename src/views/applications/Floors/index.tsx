@@ -10,7 +10,7 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
   return (
     <>
       <Helmet>
-        <title>Used Services</title>
+        <title>Floors</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />

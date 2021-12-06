@@ -28,6 +28,7 @@ import CompanyServices from 'src/common/redux/company/services';
 import { useDispatch } from 'react-redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
 import BulkActions from 'src/components/BulkActions/BulkActions';
+import { numberToString } from 'src/common/utils/transformPrice';
 
 interface ListCompanyTableProps {
   className?: string;
@@ -67,7 +68,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
 
   const MySwal = withReactContent(Swal)
 
-  const [selectedCompanies, setselectedCompanies] = useState<string[]>(
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>(
     []
   );
   const selectedBulkActions = selectedCompanies.length > 0;
@@ -80,7 +81,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
   const handleSelectAllCompanies = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setselectedCompanies(
+    setSelectedCompanies(
       event.target.checked
         ? companies.map((company) => company.id)
         : []
@@ -92,12 +93,12 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
     companyId: string
   ): void => {
     if (!selectedCompanies.includes(companyId)) {
-      setselectedCompanies((prevSelected) => [
+      setSelectedCompanies((prevSelected) => [
         ...prevSelected,
         companyId
       ]);
     } else {
-      setselectedCompanies((prevSelected) =>
+      setSelectedCompanies((prevSelected) =>
         prevSelected.filter((id) => id !== companyId)
       );
     }
@@ -181,23 +182,23 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
           </TableHead>
           <TableBody>
             {paginatedCompanys.map((company) => {
-              const iscompanySelected = selectedCompanies.includes(
+              const isCompanySelected = selectedCompanies.includes(
                 company.id
               );
               return (
                 <TableRow
                   hover
                   key={company.id}
-                  selected={iscompanySelected}
+                  selected={isCompanySelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={iscompanySelected}
+                      checked={isCompanySelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
                         handleSelectOneCompany(event, company.id)
                       }
-                      value={iscompanySelected}
+                      value={isCompanySelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -236,7 +237,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
                       gutterBottom
                       noWrap
                     >
-                      {company.capital} 
+                      {numberToString(company.capital)} 
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND

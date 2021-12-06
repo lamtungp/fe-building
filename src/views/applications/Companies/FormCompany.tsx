@@ -51,7 +51,7 @@ const FormCompany: React.FunctionComponent = (): React.ReactElement => {
     if (id) {
       getCompany(id);
     }
-  }, [])
+  }, [id])
 
   const handleEvent = async (values: any) => {
     console.log(values);

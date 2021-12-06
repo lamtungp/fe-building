@@ -122,7 +122,8 @@ const ListEmployeeTable: FC<ListEmployeeTableProps> = ({ employees }) => {
 
   useEffect(() => {
     getListCompany();
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);

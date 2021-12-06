@@ -27,7 +27,7 @@ const ListFloor: React.FunctionComponent = (): React.ReactElement => {
   useEffect(() => {
     getListFloor();
     dispatch(deleteItem(false));
-  }, [isDelete])
+  }, [isDelete, dispatch])
 
   return (
     <Card>

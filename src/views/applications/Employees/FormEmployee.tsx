@@ -12,6 +12,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import CompanyServices from 'src/common/redux/company/services';
+import { MenuProps } from 'src/common/constants/MenuProps';
 
 const validationSchema = yup.object({  
   name: yup
@@ -24,17 +25,6 @@ const validationSchema = yup.object({
     .string()
     .required('Phone Number is required'),
 });
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -69,7 +59,7 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
       getEmployee(id);
     }
     getListCompany();
-  }, [])
+  }, [id])
 
   const handleEvent = async (values: any): Promise<any> => {
     values = {...values, dob: selectedDate, company_id: selectedCompany}
@@ -203,7 +193,7 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
 
                       <Grid container spacing={3}>
                         <Grid item xs={6}>
-                          <FormControl fullWidth sx={{ marginTop: 1 }}>
+                          <FormControl fullWidth sx={{ marginTop: 2 }}>
                             <InputLabel>Select Company</InputLabel>
                             <Select
                               value={selectedCompany}
@@ -223,13 +213,13 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
                           </FormControl>
                         </Grid>
 
-                        <Grid item xs={6} marginTop={1}>
+                        <Grid item xs={6} marginTop={2}>
                           <DatePicker
                               label="Day of Birth"
                               inputFormat="dd/MM/yyyy"
                               value={selectedDate}
                               onChange={handleSelectedDate}
-                              renderInput={(params) => <TextField {...params} />}
+                              renderInput={(params) => <TextField {...params} fullWidth />}
                             />
                         </Grid>
                       </Grid>

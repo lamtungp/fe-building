@@ -22,6 +22,18 @@ const MenuProps = {
   },
 };
 
+const validationSchema = yup.object({
+  name: yup
+    .string()
+    .required('Name is required'),
+  floor_area: yup
+    .number()
+    .required('Floor Area is required'),
+  unit_price: yup
+    .number()
+    .required('Unit Price is required'),
+})
+
 const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal)
@@ -61,7 +73,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
     if (id) {
       getFloor(id);
     }
-  }, [])
+  }, [id])
 
   const handleSelectedStatus = (e: ChangeEvent<HTMLInputElement>): void => {
     setSelectedStatus(e.target.value)
@@ -102,7 +114,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   return (
     <div>
       <Helmet>
-        <title>Form Service</title>
+        <title>Form Floor</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />
@@ -138,6 +150,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
               <CardContent sx={{ p: 4, mx: 6 }}>
                 <Formik
                   initialValues={floor}
+                  validationSchema={validationSchema}
                   enableReinitialize
                   onSubmit={(values) => {
                     handleEvent(values);
@@ -170,7 +183,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
                           value={values.floor_area}
                           onChange={handleChange}
                           InputProps={{
-                            endAdornment: <InputAdornment position="end">m2</InputAdornment>,
+                            endAdornment: <InputAdornment position="end">m<sup>2</sup></InputAdornment>,
                           }}
                           error={touched.floor_area && Boolean(errors.floor_area)}
                           helperText={touched.floor_area && errors.floor_area}

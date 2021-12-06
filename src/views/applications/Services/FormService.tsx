@@ -10,7 +10,6 @@ import Footer from 'src/components/Footer';
 import SvServices from 'src/common/redux/service/services';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { numberToString } from 'src/common/utils/transformPrice';
 
 const validationSchema = yup.object({  
   name: yup
@@ -49,7 +48,7 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
     if (id) {
       getService(id);
     }
-  }, [])
+  }, [id])
 
   const handleEvent = async (values: any) => {
     let res: any;

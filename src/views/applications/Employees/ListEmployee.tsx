@@ -24,15 +24,18 @@ const ListEmployee: React.FunctionComponent = (): React.ReactElement => {
 
   useEffect(() => {
     getListEmployee()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     getListEmployee();
     dispatch(deleteItem(false));
-  }, [isDelete])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDelete, dispatch])
 
   useEffect(() => {
     getListEmployee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectCompany])
 
   return (

@@ -1,40 +1,41 @@
 import { Card } from '@mui/material';
-import ListServiceTable from './ListServiceTable';
+import ListStaffTable from './ListStaffTable';
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GlobalState } from 'src/common/redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
-import SvServices from 'src/common/redux/service/services';
+import StaffServices from 'src/common/redux/staff/services';
 
-const ListService: React.FunctionComponent = (): React.ReactElement => {
-  const [services, setServices] = useState()
+const RecentOrders: React.FunctionComponent = (): React.ReactElement => {
+
+  const [staffs, setStaffs] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
 
 
-  const getListService = async () => {
+  const getListStaff = async () => {
     try {
-      const data = await SvServices.index()
-      setServices(data);
+      const data = await StaffServices.index()
+      setStaffs(data);
     } catch (error) {
       console.log(error.message)
     }
   }
 
   useEffect(() => {
-    getListService()
+    getListStaff()
   }, [])
 
   useEffect(() => {
-    getListService();
+    getListStaff();
     dispatch(deleteItem(false));
   }, [isDelete, dispatch])
 
   return (
     <Card>
-      <ListServiceTable services={services} />
+      <ListStaffTable staffs={staffs} />
     </Card>
   );
 }
 
-export default ListService;
+export default RecentOrders;
