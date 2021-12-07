@@ -73,7 +73,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
   );
   const selectedBulkActions = selectedCompanies.length > 0;
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(10);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
@@ -309,7 +309,7 @@ const ListCompanyTable: FC<ListCompanyTableProps> = ({ companies }) => {
           onRowsPerPageChange={handleLimitChange}
           page={page}
           rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 15]}
+          rowsPerPageOptions={[10, 15, 20]}
         />
       </Box>
     </Card>

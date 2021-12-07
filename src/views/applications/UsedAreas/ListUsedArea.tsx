@@ -27,7 +27,7 @@ const ListUsedArea: React.FunctionComponent = (): React.ReactElement => {
   useEffect(() => {
     getListUsedArea();
     dispatch(deleteItem(false));
-  }, [isDelete])
+  }, [isDelete, dispatch])
 
   return (
     <Card>

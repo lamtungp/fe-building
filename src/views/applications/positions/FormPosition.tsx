@@ -4,66 +4,63 @@ import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
-import SvServices from 'src/common/redux/service/services';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import UsedSvServices from 'src/common/redux/used_service/services';
-import CompanyServices from 'src/common/redux/company/services';
-import { ServiceEnums } from 'src/common/enums';
+import { MenuProps } from 'src/common/constants/MenuProps';
+import SalaryServices from 'src/common/redux/salary/services';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+const props = {
+  title: 'Positions',
+  subtitle: 'These are your recent positions of building',
+  redirect: 'management/add-position',
+  action: 'Add position'
+}
 
-const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
+const validationSchema = yup.object({
+  position: yup
+    .string()
+    .required('Position is required'),
+  salary: yup
+    .number()
+    .min(1)
+    .required('Salary is required'),
+})
+
+const FormPosition: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal)
-  
   const { id } = useParams();
 
-  const [usedService, setUsedService] = useState({
-    company: '',
-    service: ''
+  const salary_grade = [
+    {
+      id: 1,
+      name: '1'
+    },
+    {
+      id: 2,
+      name: '2'
+    },
+    {
+      id: 3,
+      name: '3'
+    }
+  ]
+
+  const [position, setPosition] = useState({
+    position: '',
+    salary: 0
   })
-  const [services, setServices] = useState([])
-  const [companies, setCompanies] = useState([])
 
-  const [selectedCompany, setSelectedCompany] = useState('')
-  const [selectedService, setSelectedService] = useState('')
+  const [selectedSalaryGrade, setSelectedSalaryGrade] = useState(3)
 
-  const getListService = async () => {
-    const data = await SvServices.index();
-    setServices(data)
-    if (data.length > 0 && !id) {
-      setSelectedService(data[0].id)
-    }
-  }
-
-  const getListCompany = async () => {
-    const data = await CompanyServices.index();
-    setCompanies(data)
-    if (data.length > 0 && !id) {
-      setSelectedCompany(data[0].id)
-    }
-  }
-
-  const getUsedService = async (id: string) => {
+  const getPosition = async (id: string) => {
     try {
-      const data = await UsedSvServices.show(id)
-      setUsedService({ company: data.company.name, service: data.service.name });
-      console.log(usedService)
-      setSelectedService(data.service.id)
-      setSelectedCompany(data.company.id)
+      const data = await SalaryServices.show(id)
+      setPosition({ position: data.position, salary: data.salary });
+      setSelectedSalaryGrade(data.salary_grade)
     } catch (error) {
       console.log(error.message)
     }
@@ -71,48 +68,41 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getUsedService(id);
+      getPosition(id);
     }
-    getListService();
-    getListCompany();
   }, [])
 
-  const handleSelectedService = (e: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedService(e.target.value)
-  }
-
-  const handleSelectedCompany = (e: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedCompany(e.target.value)
+  const handleSelectedSalaryGrade = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedSalaryGrade(Number(e.target.value))
   }
 
   const handleEvent = async (values: any) => {
-    values.company_id = selectedCompany;
-    values.service_id = selectedService; 
+    values.salary_grade = selectedSalaryGrade;
     let res: any;
     try {
       if (id) {
-        res = await UsedSvServices.update(values, id)
+        res = await SalaryServices.update(values, id)
       } else {
-        res = await UsedSvServices.create(values)
+        res = await SalaryServices.create(values)
       }
       if (res) {
         MySwal.fire({
-          text: id ? 'Update service successfully' : 'Register service successfully',
+          text: id ? 'Update position successfully' : 'Register position successfully',
           icon: 'success',
         }).then(async (result) => {
           if (result.isConfirmed) {
-            navigate('/statistics/used-services')
+            navigate('/management/positions')
           }
         })
       } else {
         MySwal.fire({
-          text: id ? 'Register service fail' : 'Update service fail',
+          text: id ? 'Register position fail' : 'Update position fail',
           icon: 'error'
         })
       }
     } catch (error) {
       MySwal.fire({
-        text: error.message,
+        text: 'System do not for add position now',
         icon: 'error'
       })
     }
@@ -121,10 +111,10 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   return (
     <div>
       <Helmet>
-        <title>Form Service</title>
+        <title>Form Position</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid
@@ -156,98 +146,102 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
 
               <CardContent sx={{ p: 4, mx: 6 }}>
                 <Formik
-                  initialValues={{ company_id: '', service_id: '' }}
+                  initialValues={position}
+                  validationSchema={validationSchema}
                   enableReinitialize
                   onSubmit={(values) => {
                     handleEvent(values);
                   }}
                   validateOnChange={true}
                 >
-                  {({ handleSubmit }) => (
+                  {({ handleChange, handleSubmit, errors, touched, values }) => (
                     <form>
-                      <Grid container spacing={3}>
-                        <Grid item xs={6}>
-                          <FormControl fullWidth>
-                          <InputLabel>Select Service</InputLabel>
-                          { id ? 
+                      <Grid item xs={12}>
+                        {id ?
+                          <TextField
+                            margin={'normal'}
+                            fullWidth
+                            id="position"
+                            name="position"
+                            label="Position"
+                            value={values.position}
+                            onChange={handleChange}
+                            disabled
+                            error={touched.position && Boolean(errors.position)}
+                            helperText={touched.position && errors.position}
+                          /> :
+                          <TextField
+                            margin={'normal'}
+                            fullWidth
+                            id="position"
+                            name="position"
+                            label="Position"
+                            value={values.position}
+                            onChange={handleChange}
+                            error={touched.position && Boolean(errors.position)}
+                            helperText={touched.position && errors.position}
+                          />
+                        }
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          margin={'normal'}
+                          fullWidth
+                          id="salary"
+                          name="salary"
+                          label="Salary"
+                          value={values.salary}
+                          onChange={handleChange}
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">VND</InputAdornment>,
+                          }}
+                          error={touched.salary && Boolean(errors.salary)}
+                          helperText={touched.salary && errors.salary}
+                        />
+                      </Grid>
+
+                      <Grid item xs={6} marginTop={2}>
+                        <FormControl fullWidth>
+                          <InputLabel>Select Salary Grade</InputLabel>
+                          {id ?
                             <Select
-                              value={selectedCompany}
-                              onChange={handleSelectedCompany}
-                              input={<OutlinedInput label="Select Company" />}
-                              MenuProps={MenuProps}
+                              value={selectedSalaryGrade}
                               disabled
-                              
+                              onChange={handleSelectedSalaryGrade}
+                              input={<OutlinedInput label="Select Salary Grade" />}
+                              MenuProps={MenuProps}
                             >
-                              {companies.map((company) => (
+                              {salary_grade.map((e) => (
                                 <MenuItem
-                                  key={company.id}
-                                  value={company.id}
+                                  key={e.id}
+                                  value={e.id}
                                 >
-                                  {company.name}
+                                  {e.name}
                                 </MenuItem>
                               ))}
-                            </Select> : 
+                            </Select> :
                             <Select
-                              value={selectedCompany}
-                              onChange={handleSelectedCompany}
-                              input={<OutlinedInput label="Select Company" />}
+                              value={selectedSalaryGrade}
+                              onChange={handleSelectedSalaryGrade}
+                              input={<OutlinedInput label="Select Salary Grade" />}
                               MenuProps={MenuProps}
                             >
-                              {companies.map((company) => (
+                              {salary_grade.map((e) => (
                                 <MenuItem
-                                  key={company.id}
-                                  value={company.id}
+                                  key={e.id}
+                                  value={e.id}
                                 >
-                                  {company.name}
+                                  {e.name}
                                 </MenuItem>
                               ))}
                             </Select>
                           }
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={6}>
-                          <FormControl fullWidth>
-                            <InputLabel>Select Service</InputLabel>
-                            { usedService.service === ServiceEnums.CLEANING || usedService.service === ServiceEnums.SECURITY ? 
-                              <Select
-                                value={selectedService}
-                                onChange={handleSelectedService}
-                                input={<OutlinedInput label="Select Service" />}
-                                MenuProps={MenuProps}
-                                disabled
-                              >
-                                {services.map((service) => (
-                                  <MenuItem
-                                    key={service.id}
-                                    value={service.id}
-                                  >
-                                    {service.name}
-                                  </MenuItem>
-                                ))}
-                              </Select> :
-                              <Select
-                                value={selectedService}
-                                onChange={handleSelectedService}
-                                input={<OutlinedInput label="Select Service" />}
-                                MenuProps={MenuProps}
-                              >
-                                {services.map((service) => (
-                                  <MenuItem
-                                    key={service.id}
-                                    value={service.id}
-                                  >
-                                    {service.name}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            }
-                          </FormControl>
-                        </Grid>
+                        </FormControl>
                       </Grid>
 
                       <Box textAlign='center' marginTop={2} sx={{ '& > button': { m: 1 } }}>
-                        <Button color="primary" variant="outlined" onClick={() => navigate('/statistics/used-services')}>
+                        <Button color="primary" variant="outlined" onClick={() => navigate('/management/positions')}>
                           Back
                         </Button>
                         <Button color="primary" variant="contained" onClick={() => handleSubmit()}>
@@ -267,4 +261,4 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   );
 };
 
-export default FormUsedService;
+export default FormPosition;

@@ -31,7 +31,8 @@
     Quick Start
 </h2>
 <ol>
-    <li>Make sure you have the latest stable versions for Node.js and NPM installed <br/>
+    <li> Setup Environment <br/>
+    Make sure you have the latest stable versions for Node.js and NPM installed <br/>
     If you don't have <b>Nodejs</b> installed, you just need to install <b>Nodejs</b> (npm will be installed on successful nodejs installation). <br/>
     For more details, visit: <a href="https://nodejs.org/en/">https://nodejs.org/en</a>. <br/>
     </li>
@@ -43,6 +44,8 @@
     <li>Install dependencies: <br/>
     The dependencies of the app are listed in the <b>package.json</b> file. <br/>
     Run <code>npm install</code> inside the project folder.</li>
+    <li>Create <b>.env</b> file: <br/>
+    Copy from <b>.env.example</b> file to <b>.env</b> file. <br/>
     <li>Start dev server: <br/>
     After the install finishes, run <code>npm  start</code>. <br/> 
     A browser window will open on <a href="http://localhost:3000">http://localhost:3000</a> where you''ll see the live preview.</li>

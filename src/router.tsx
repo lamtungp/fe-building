@@ -23,6 +23,7 @@ const Staffs = Loader(lazy(() => import('src/views/applications/Staffs')));
 const Companies = Loader(lazy(() => import('src/views/applications/Companies')));
 const UsedServices = Loader(lazy(() => import('src/views/applications/UsedServices')));
 const UsedAreas = Loader(lazy(() => import('src/views/applications/UsedAreas')));
+const Positions = Loader(lazy(() => import('src/views/applications/Positions')));
 
 const FormBuilding = Loader(lazy(() => import('src/views/applications/Building/FormBuilding')));
 const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/FormCompany')));
@@ -32,6 +33,7 @@ const FormService = Loader(lazy(() => import('src/views/applications/Services/Fo
 const FormFloor = Loader(lazy(() => import('src/views/applications/Floors/FormFloor')));
 const FormUsedService = Loader(lazy(() => import('src/views/applications/UsedServices/FormUsedService')));
 const FormUsedArea = Loader(lazy(() => import('src/views/applications/UsedAreas/FormUsedArea')));
+const FormPosition = Loader(lazy(() => import('src/views/applications/Positions/FormPosition')));
 
 // const UserProfile = Loader(lazy(() => import('src/content/applications/Users/profile')));
 // const UserSettings = Loader(lazy(() => import('src/content/applications/Users/settings')));
@@ -157,6 +159,18 @@ const routes: PartialRouteObject[] = [
         path: 'edit-floor/:id',
         element: <FormFloor />
       },
+      {
+        path: 'positions',
+        element: <Positions />
+      },
+      {
+        path: 'add-position',
+        element: <FormPosition />
+      },
+      {
+        path: 'edit-position/:id',
+        element: <FormPosition />
+      }
     ]
   },
 

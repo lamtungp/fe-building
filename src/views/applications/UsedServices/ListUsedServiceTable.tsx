@@ -73,7 +73,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   );
   const selectedBulkActions = selectedServices.length > 0;
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(10);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
@@ -287,7 +287,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
           onRowsPerPageChange={handleLimitChange}
           page={page}
           rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 25, 30]}
+          rowsPerPageOptions={[10, 15, 20]}
         />
       </Box>
     </Card>

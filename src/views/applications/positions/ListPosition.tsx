@@ -4,34 +4,34 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GlobalState } from 'src/common/redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
-import UsedSvServices from 'src/common/redux/used_service/services';
+import SalaryServices from 'src/common/redux/salary/services';
 
 const ListPosition: React.FunctionComponent = (): React.ReactElement => {
-  const [services, setServices] = useState()
+  const [positions, setPositions] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
 
-  const getListService = async () => {
+  const getListPosition = async () => {
     try {
-      const data = await UsedSvServices.index()
-      setServices(data);
+      const data = await SalaryServices.index()
+      setPositions(data);
     } catch (error) {
       console.log(error.message)
     }
   }
 
   useEffect(() => {
-    getListService()
+    getListPosition()
   }, [])
 
   useEffect(() => {
-    getListService();
+    getListPosition();
     dispatch(deleteItem(false));
-  }, [isDelete])
+  }, [isDelete, dispatch])
 
   return (
     <Card>
-      <ListPositionTable services={services} />
+      <ListPositionTable positions={positions} />
     </Card>
   );
 }

@@ -20,21 +20,21 @@ import {
   CardHeader,
 } from '@mui/material';
 
-import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
 import { useDispatch } from 'react-redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
-import UsedSvServices from 'src/common/redux/used_service/services';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
 import { ServiceEnums } from 'src/common/enums';
+import SalaryServices from 'src/common/redux/salary/services';
+import { numberToString } from 'src/common/utils/transformPrice';
 
-interface ListServiceTableProps {
+interface ListPositionTableProps {
   className?: string;
-  services: any[];
+  positions: any[];
 }
 
 interface Filters {
@@ -42,13 +42,13 @@ interface Filters {
 }
 
 const applyFilters = (
-  services: any[],
+  positions: any[],
   filters: Filters
 ): any[] => {
-  return services.filter((serviceStatus) => {
+  return positions.filter((positionStatus) => {
     let matches = true;
 
-    if (filters.status && serviceStatus.status !== filters.status) {
+    if (filters.status && positionStatus.status !== filters.status) {
       matches = false;
     }
 
@@ -57,50 +57,50 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  services: any[],
+  positions: any[],
   page: number,
   limit: number
 ): any[] => {
-  return services.slice(page * limit, page * limit + limit);
+  return positions.slice(page * limit, page * limit + limit);
 };
 
-const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
+const ListPositionTable: FC<ListPositionTableProps> = ({ positions }) => {
   const MySwal = withReactContent(Swal)
   const dispatch = useDispatch();
   const navigate = useNavigate()
   
-  const [selectedServices, setSelectedServices] = useState<string[]>(
+  const [selectedPositions, setSelectedPositions] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedServices.length > 0;
+  const selectedBulkActions = selectedPositions.length > 0;
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(10);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
 
-  const handleSelectAllservices = (
+  const handleSelectAllPositions = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedServices(
+    setSelectedPositions(
       event.target.checked
-        ? services.map((employee) => employee.id)
+        ? positions.map((position) => position.id)
         : []
     );
   };
 
-  const handleSelectOneEmployee = (
+  const handleSelectOnePosition = (
     event: ChangeEvent<HTMLInputElement>,
-    servicesId: string
+    positionsId: string
   ): void => {
-    if (!selectedServices.includes(servicesId)) {
-      setSelectedServices((prevSelected) => [
+    if (!selectedPositions.includes(positionsId)) {
+      setSelectedPositions((prevSelected) => [
         ...prevSelected,
-        servicesId
+        positionsId
       ]);
     } else {
-      setSelectedServices((prevSelected) =>
-        prevSelected.filter((id) => id !== servicesId)
+      setSelectedPositions((prevSelected) =>
+        prevSelected.filter((id) => id !== positionsId)
       );
     }
   };
@@ -113,23 +113,23 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredServices = applyFilters(services, filters);
-  const paginatedServices = applyPagination(
-    filteredServices,
+  const filteredPositions = applyFilters(positions, filters);
+  const paginatedPositions = applyPagination(
+    filteredPositions,
     page,
     limit
   );
-  const selectedSomeServices =
-    selectedServices.length > 0 &&
-    selectedServices.length < services.length;
-  const selectedAllServices =
-    selectedServices.length === services.length;
+  const selectedSomePositions =
+    selectedPositions.length > 0 &&
+    selectedPositions.length < positions.length;
+  const selectedAllPositions =
+    selectedPositions.length === positions.length;
   const theme = useTheme();
 
-  const handleDeleteEmployee = async (id: string) => {
+  const handleDeletePosition = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this employee!",
+      text: "You won't be delete this Position!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -137,11 +137,11 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await UsedSvServices.destroy(id);
+        const res = await SalaryServices.destroy(id);
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Employee has been deleted.',
+            'Position has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -168,36 +168,36 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllServices}
-                  indeterminate={selectedSomeServices}
-                  onChange={handleSelectAllservices}
+                  checked={selectedAllPositions}
+                  indeterminate={selectedSomePositions}
+                  onChange={handleSelectAllPositions}
                 />
               </TableCell>
-              <TableCell>Company</TableCell>
-              <TableCell>Service</TableCell>
-              <TableCell>Total Price</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Salary grade</TableCell>
+              <TableCell>Salary</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedServices.map((used_service) => {
-              const isServiceSelected = selectedServices.includes(
-                used_service.id
+            {paginatedPositions.map((position) => {
+              const isPositionSelected = selectedPositions.includes(
+                position.id
               );
               return (
                 <TableRow
                   hover
-                  key={used_service.id}
-                  selected={isServiceSelected}
+                  key={position.id}
+                  selected={isPositionSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isServiceSelected}
+                      checked={isPositionSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEmployee(event, used_service.id)
+                        handleSelectOnePosition(event, position.id)
                       }
-                      value={isServiceSelected}
+                      value={isPositionSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -208,7 +208,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.company.name}
+                      {position.position}
                     </Typography>
                   </TableCell>
 
@@ -220,7 +220,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.name}
+                      {position.salary_grade}
                     </Typography>
                   </TableCell>
 
@@ -232,7 +232,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.unit_price}
+                      {numberToString(position.salary)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
@@ -240,39 +240,34 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                   </TableCell>
                   
                   <TableCell align="right">
-                    
-                      <>
-                        <Tooltip title="Details" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': {
-                                background: theme.colors.primary.lighter
-                              },
-                              color: theme.palette.primary.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => navigate(`/statistics/edit-used-service/${used_service.id}`)}
-                          >
-                            <EditTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </> 
-                    { (used_service.name === ServiceEnums.SECURITY || used_service.name === ServiceEnums.SECURITY) ?
-                      <Tooltip title="Delete" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': { background: theme.colors.error.lighter },
-                              color: theme.palette.error.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => handleDeleteEmployee(used_service.id)}
-                          >
-                            <DeleteTwoToneIcon fontSize="small" />
-                          </IconButton>
-                      </Tooltip>: <></> 
-                    }
+                    <Tooltip title="Details" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': {
+                            background: theme.colors.primary.lighter
+                          },
+                          color: theme.palette.primary.main
+                        }}
+                        color="inherit"
+                        size="small"
+                        onClick={() => navigate(`/management/edit-position/${position.id}`)}
+                      >
+                        <EditTwoToneIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': { background: theme.colors.error.lighter },
+                            color: theme.palette.error.main
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => handleDeletePosition(position.id)}
+                        >
+                          <DeleteTwoToneIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
@@ -283,24 +278,24 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredServices.length}
+          count={filteredPositions.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
           rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 25, 30]}
+          rowsPerPageOptions={[10, 15, 20]}
         />
       </Box>
     </Card>
   );
 };
 
-ListUsedServiceTable.propTypes = {
-  services: PropTypes.array.isRequired
+ListPositionTable.propTypes = {
+  positions: PropTypes.array.isRequired
 };
 
-ListUsedServiceTable.defaultProps = {
-  services: []
+ListPositionTable.defaultProps = {
+  positions: []
 };
 
-export default ListUsedServiceTable;
+export default ListPositionTable;

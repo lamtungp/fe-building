@@ -13,6 +13,7 @@ const Services: React.FunctionComponent = (): React.ReactElement => {
     redirect: 'management/add-service',
     action: 'Add service'
   }
+  
   return (
     <>
       <Helmet>

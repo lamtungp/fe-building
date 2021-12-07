@@ -70,7 +70,7 @@ const menuItems: MenuItems[] = [
       {
         name: 'Position',
         icon: TableViewIcon,
-        link: '/management/position'
+        link: '/management/positions'
       }
     ]
   },
