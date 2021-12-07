@@ -1,39 +1,39 @@
 import { Card } from '@mui/material';
-import ListUsedServiceTable from './ListUsedServiceTable';
+import ListUsedServiceTable from './ListUsedAreaTable';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GlobalState } from 'src/common/redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
-import UsedSvServices from 'src/common/redux/used_service/services';
+import UsedAreaServices from 'src/common/redux/used_area/services';
 
-const ListService: React.FunctionComponent = (): React.ReactElement => {
-  const [services, setServices] = useState()
+const ListUsedArea: React.FunctionComponent = (): React.ReactElement => {
+  const [usedAreas, setUsedAreas] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
 
-  const getListService = async () => {
+  const getListUsedArea = async () => {
     try {
-      const data = await UsedSvServices.index()
-      setServices(data);
+      const data = await UsedAreaServices.index()
+      setUsedAreas(data);
     } catch (error) {
       console.log(error.message)
     }
   }
 
   useEffect(() => {
-    getListService()
+    getListUsedArea()
   }, [])
 
   useEffect(() => {
-    getListService();
+    getListUsedArea();
     dispatch(deleteItem(false));
   }, [isDelete])
 
   return (
     <Card>
-      <ListUsedServiceTable services={services} />
+      <ListUsedServiceTable usedAreas={usedAreas} />
     </Card>
   );
 }
 
-export default ListService;
+export default ListUsedArea;

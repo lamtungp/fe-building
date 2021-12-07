@@ -20,21 +20,19 @@ import {
   CardHeader,
 } from '@mui/material';
 
-import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
 import { useDispatch } from 'react-redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
-import UsedSvServices from 'src/common/redux/used_service/services';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
-import { ServiceEnums } from 'src/common/enums';
+import UsedAreaServices from 'src/common/redux/used_area/services';
 
-interface ListServiceTableProps {
+interface ListUsedAreaTableProps {
   className?: string;
-  services: any[];
+  usedAreas: any[];
 }
 
 interface Filters {
@@ -42,13 +40,13 @@ interface Filters {
 }
 
 const applyFilters = (
-  services: any[],
+  usedAreas: any[],
   filters: Filters
 ): any[] => {
-  return services.filter((serviceStatus) => {
+  return usedAreas.filter((usedAreaStatus) => {
     let matches = true;
 
-    if (filters.status && serviceStatus.status !== filters.status) {
+    if (filters.status && usedAreaStatus.status !== filters.status) {
       matches = false;
     }
 
@@ -57,50 +55,50 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  services: any[],
+  usedAreas: any[],
   page: number,
   limit: number
 ): any[] => {
-  return services.slice(page * limit, page * limit + limit);
+  return usedAreas.slice(page * limit, page * limit + limit);
 };
 
-const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
+const ListUsedAreaTable: FC<ListUsedAreaTableProps> = ({ usedAreas }) => {
   const MySwal = withReactContent(Swal)
   const dispatch = useDispatch();
   const navigate = useNavigate()
   
-  const [selectedServices, setSelectedServices] = useState<string[]>(
+  const [selectedUsedAreas, setSelectedUsedAreas] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedServices.length > 0;
+  const selectedBulkActions = selectedUsedAreas.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
 
-  const handleSelectAllservices = (
+  const handleSelectAllUsedAreas = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedServices(
+    setSelectedUsedAreas(
       event.target.checked
-        ? services.map((employee) => employee.id)
+        ? usedAreas.map((usedArea) => usedArea.id)
         : []
     );
   };
 
-  const handleSelectOneEmployee = (
+  const handleSelectOneUsedArea = (
     event: ChangeEvent<HTMLInputElement>,
-    servicesId: string
+    usedAreasId: string
   ): void => {
-    if (!selectedServices.includes(servicesId)) {
-      setSelectedServices((prevSelected) => [
+    if (!selectedUsedAreas.includes(usedAreasId)) {
+      setSelectedUsedAreas((prevSelected) => [
         ...prevSelected,
-        servicesId
+        usedAreasId
       ]);
     } else {
-      setSelectedServices((prevSelected) =>
-        prevSelected.filter((id) => id !== servicesId)
+      setSelectedUsedAreas((prevSelected) =>
+        prevSelected.filter((id) => id !== usedAreasId)
       );
     }
   };
@@ -113,23 +111,23 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredServices = applyFilters(services, filters);
-  const paginatedServices = applyPagination(
-    filteredServices,
+  const filteredUsedAreas = applyFilters(usedAreas, filters);
+  const paginatedUsedAreas = applyPagination(
+    filteredUsedAreas,
     page,
     limit
   );
-  const selectedSomeServices =
-    selectedServices.length > 0 &&
-    selectedServices.length < services.length;
-  const selectedAllServices =
-    selectedServices.length === services.length;
+  const selectedSomeUsedAreas =
+    selectedUsedAreas.length > 0 &&
+    selectedUsedAreas.length < usedAreas.length;
+  const selectedAllUsedAreas =
+    selectedUsedAreas.length === usedAreas.length;
   const theme = useTheme();
 
-  const handleDeleteEmployee = async (id: string) => {
+  const handleDeleteUsedArea = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this employee!",
+      text: "You won't be delete this used area!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -137,11 +135,11 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await UsedSvServices.destroy(id);
+        const res = await UsedAreaServices.destroy(id);
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Employee has been deleted.',
+            'Used area has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -168,26 +166,28 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllServices}
-                  indeterminate={selectedSomeServices}
-                  onChange={handleSelectAllservices}
+                  checked={selectedAllUsedAreas}
+                  indeterminate={selectedSomeUsedAreas}
+                  onChange={handleSelectAllUsedAreas}
                 />
               </TableCell>
               <TableCell>Company</TableCell>
-              <TableCell>Service</TableCell>
+              <TableCell>Location</TableCell>
+              <TableCell>Used Area</TableCell>
               <TableCell>Total Price</TableCell>
+              <TableCell>Rental Term</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedServices.map((used_service) => {
-              const isServiceSelected = selectedServices.includes(
-                used_service.id
+            {paginatedUsedAreas.map((used_area) => {
+              const isServiceSelected = selectedUsedAreas.includes(
+                used_area.id
               );
               return (
                 <TableRow
                   hover
-                  key={used_service.id}
+                  key={used_area.id}
                   selected={isServiceSelected}
                 >
                   <TableCell padding="checkbox">
@@ -195,11 +195,12 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       color="primary"
                       checked={isServiceSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEmployee(event, used_service.id)
+                        handleSelectOneUsedArea(event, used_area.id)
                       }
                       value={isServiceSelected}
                     />
                   </TableCell>
+
                   <TableCell>
                     <Typography
                       variant="body1"
@@ -208,7 +209,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.company.name}
+                      {used_area.company.name}
                     </Typography>
                   </TableCell>
 
@@ -220,7 +221,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.name}
+                      {used_area.floor.name}
                     </Typography>
                   </TableCell>
 
@@ -232,47 +233,69 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.unit_price}
+                      {used_area.used_area}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      m<sup>2</sup>
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {used_area.floor.unit_price}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND
                     </Typography>
                   </TableCell>
+
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {used_area.rental_term}
+                    </Typography>
+                  </TableCell>
                   
                   <TableCell align="right">
-                    
-                      <>
-                        <Tooltip title="Details" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': {
-                                background: theme.colors.primary.lighter
-                              },
-                              color: theme.palette.primary.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => navigate(`/statistics/edit-used-service/${used_service.id}`)}
-                          >
-                            <EditTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </> 
-                    { (used_service.name === ServiceEnums.SECURITY || used_service.name === ServiceEnums.SECURITY) ?
-                      <Tooltip title="Delete" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': { background: theme.colors.error.lighter },
-                              color: theme.palette.error.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => handleDeleteEmployee(used_service.id)}
-                          >
-                            <DeleteTwoToneIcon fontSize="small" />
-                          </IconButton>
-                      </Tooltip>: <></> 
-                    }
+                    <Tooltip title="Details" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': {
+                            background: theme.colors.primary.lighter
+                          },
+                          color: theme.palette.primary.main
+                        }}
+                        color="inherit"
+                        size="small"
+                        onClick={() => navigate(`/statistics/edit-used-area/${used_area.id}`)}
+                      >
+                        <EditTwoToneIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': { background: theme.colors.error.lighter },
+                            color: theme.palette.error.main
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => handleDeleteUsedArea(used_area.id)}
+                        >
+                          <DeleteTwoToneIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
@@ -283,7 +306,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredServices.length}
+          count={filteredUsedAreas.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -295,12 +318,12 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   );
 };
 
-ListUsedServiceTable.propTypes = {
-  services: PropTypes.array.isRequired
+ListUsedAreaTable.propTypes = {
+  usedAreas: PropTypes.array.isRequired
 };
 
-ListUsedServiceTable.defaultProps = {
-  services: []
+ListUsedAreaTable.defaultProps = {
+  usedAreas: []
 };
 
-export default ListUsedServiceTable;
+export default ListUsedAreaTable;

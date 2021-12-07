@@ -34,6 +34,7 @@
     "react-custom-scrollbars-2": "4.4.0",
     "react-dom": "17.0.2",
     "react-helmet-async": "1.1.2",
+    "react-notifications-component": "^3.1.0",
     "react-redux": "^7.2.6",
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
@@ -92,6 +93,7 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "node-sass": "6.0.1",
     "prettier": "2.4.1",
+    "react-notifications": "^1.7.2",
     "typescript": "4.4.4"
   }
 }

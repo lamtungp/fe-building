@@ -6,6 +6,8 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import HomeIcon from '@mui/icons-material/Home';
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -70,8 +72,13 @@ const menuItems: MenuItems[] = [
     items: [
       {
         name: 'Used Services',
-        icon: MiscellaneousServicesIcon,
+        icon: PermDataSettingIcon,
         link: '/statistics/used-services'
+      },
+      {
+        name: 'Used Areas',
+        icon: SettingsOverscanIcon,
+        link: '/statistics/used-areas'
       }
     ]
   }

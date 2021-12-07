@@ -25,7 +25,6 @@ import {
   CardHeader
 } from '@mui/material';
 
-import Label from 'src/components/Label';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
@@ -43,27 +42,6 @@ interface StaffsTableProps {
 interface Filters {
   status?: any;
 }
-
-const getStatusLabel = (staffStatus: any): JSX.Element => {
-  const map = {
-    failed: {
-      text: 'Failed',
-      color: 'error'
-    },
-    completed: {
-      text: 'Completed',
-      color: 'success'
-    },
-    pending: {
-      text: 'Pending',
-      color: 'warning'
-    }
-  };
-
-  const { text, color }: any = map[staffStatus];
-
-  return <Label color={color}>{text}</Label>;
-};
 
 const applyFilters = (
   staffs: any[],

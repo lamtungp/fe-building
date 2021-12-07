@@ -4,13 +4,13 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import ListUsedService from './ListUsedService';
+import ListUsedService from './ListUsedArea';
 
 const Services: React.FunctionComponent = (): React.ReactElement =>{
   return (
     <>
       <Helmet>
-        <title>Used Services</title>
+        <title>Used Areas</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />

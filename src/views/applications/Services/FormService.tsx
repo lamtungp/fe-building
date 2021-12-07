@@ -130,19 +130,35 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
                   >
                     {({ handleChange, handleSubmit, errors, touched, values }) => (
                     <form>
-                      <Grid item xs={12}>
-                        <TextField
+                      {( id && ( values.name === "Security service" || values.name === "Cleaning service" )) ? 
+                        <Grid item xs={12}>
+                          <TextField
                             margin={'normal'}
                             fullWidth
                             id="name"
                             name="name"
                             label="Name Service"
                             value={values.name}
+                            disabled
                             onChange={handleChange}
                             error={touched.name && Boolean(errors.name)}
                             helperText={touched.name && errors.name}
                           />
-                      </Grid>
+                        </Grid>
+                      : <Grid item xs={12}>
+                          <TextField
+                              margin={'normal'}
+                              fullWidth
+                              id="name"
+                              name="name"
+                              label="Name Service"
+                              value={values.name}
+                              onChange={handleChange}
+                              error={touched.name && Boolean(errors.name)}
+                              helperText={touched.name && errors.name}
+                            />
+                        </Grid> 
+                      }
 
                       <Grid item xs={12}>
                         <TextField

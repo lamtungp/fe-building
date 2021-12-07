@@ -12,10 +12,10 @@ const PageHeader: React.FunctionComponent = (): React.ReactElement => {
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Services
+          Used Area
         </Typography>
         <Typography variant="subtitle2">
-          These are your recent services
+          These are your recent Used Areas
         </Typography>
       </Grid>
       <Grid item>
@@ -24,9 +24,9 @@ const PageHeader: React.FunctionComponent = (): React.ReactElement => {
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
             startIcon={<AddTwoToneIcon fontSize="small" />}
-            onClick={() => navigate('/statistics/add-used-service')}
+            onClick={() => navigate('/statistics/add-used-area')}
           >
-            Register Service
+            Add Used Area
           </Button>
           : <></>
         }
