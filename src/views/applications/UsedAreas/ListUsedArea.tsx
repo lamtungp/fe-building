@@ -1,5 +1,5 @@
 import { Card } from '@mui/material';
-import ListUsedServiceTable from './ListUsedAreaTable';
+import ListUsedAreaTable from './ListUsedAreaTable';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GlobalState } from 'src/common/redux';
@@ -31,7 +31,7 @@ const ListUsedArea: React.FunctionComponent = (): React.ReactElement => {
 
   return (
     <Card>
-      <ListUsedServiceTable usedAreas={usedAreas} />
+      <ListUsedAreaTable usedAreas={usedAreas} />
     </Card>
   );
 }

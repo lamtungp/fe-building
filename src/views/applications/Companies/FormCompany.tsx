@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import CompanyServices from 'src/common/redux/company/services';
@@ -28,6 +28,13 @@ const validationSchema = yup.object({
     .string()
     .required('Phone number is required')
 });
+
+const props = {
+  title: 'Companies',
+  subtitle: "These are building's companies recent",
+  redirect: 'management/add-company',
+  action: 'Add company'
+}
 
 const FormCompany: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -92,7 +99,7 @@ const FormCompany: React.FunctionComponent = (): React.ReactElement => {
         <title>Form Company</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid

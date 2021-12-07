@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import Swal from 'sweetalert2';
@@ -20,8 +20,16 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 const validationSchema = yup.object({  
   used_area: yup
     .number()
+    .min(1, "Used Area must be greater than or equal to 1")
     .required('Used Area is required')
 });
+
+const props = {
+  title: 'Used Area',
+  subtitle: 'These are your recent Used Areas',
+  redirect: 'statistics/add-used-area',
+  action: 'Add Used Area'
+}
 
 const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -41,11 +49,17 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   const getListFloor = async () => {
     const data = await FloorServices.index();
     setFloors(data)
+    if (data.length > 0 && !id) {
+      setSelectedFloor(data[0].id)
+    }
   }
 
   const getListCompany = async () => {
     const data = await CompanyServices.index();
     setCompanies(data)
+    if (data.length > 0 && !id) {
+      setSelectedCompany(data[0].id)
+    }
   }
 
   const getUsedArea = async (id: string) => {
@@ -120,7 +134,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
         <title>Form Used Area</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid

@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import SvServices from 'src/common/redux/service/services';
@@ -22,6 +22,13 @@ const validationSchema = yup.object({
     .number()
     .required('Hotline is required')
 });
+
+const props = {
+  title: 'Services',
+  subtitle: 'These are your recent services',
+  redirect: 'management/add-service',
+  action: 'Add service'
+}
 
 const FormService: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -88,7 +95,7 @@ const FormService: React.FunctionComponent = (): React.ReactElement => {
         <title>Form Service</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid

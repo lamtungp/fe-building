@@ -4,9 +4,9 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import ListUsedService from './ListUsedService';
+import ListPosition from './ListPosition';
 
-const Services: React.FunctionComponent = (): React.ReactElement =>{
+const Positions: React.FunctionComponent = (): React.ReactElement =>{
   return (
     <>
       <Helmet>
@@ -24,7 +24,7 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
           spacing={3}
         >
           <Grid item xs={12}>
-            <ListUsedService />
+            <ListPosition />
           </Grid>
         </Grid>
       </Container>
@@ -33,4 +33,4 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
   );
 }
 
-export default Services;
+export default Positions;

@@ -8,6 +8,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
+import TableViewIcon from '@mui/icons-material/TableView';
+import WorkIcon from '@mui/icons-material/Work';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -64,6 +66,11 @@ const menuItems: MenuItems[] = [
         name: 'Services',
         icon: MiscellaneousServicesIcon,
         link: '/management/services'
+      },
+      {
+        name: 'Position',
+        icon: TableViewIcon,
+        link: '/management/position'
       }
     ]
   },
@@ -79,6 +86,11 @@ const menuItems: MenuItems[] = [
         name: 'Used Areas',
         icon: SettingsOverscanIcon,
         link: '/statistics/used-areas'
+      },
+      {
+        name: 'Worked Time',
+        icon: WorkIcon,
+        link: '/statistics/worked-time'
       }
     ]
   }

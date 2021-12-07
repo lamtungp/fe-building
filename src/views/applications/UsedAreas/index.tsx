@@ -1,19 +1,25 @@
 import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import ListUsedService from './ListUsedArea';
+import ListUsedArea from './ListUsedArea';
+import PageHeader from 'src/components/PageHeader';
 
-const Services: React.FunctionComponent = (): React.ReactElement =>{
+const UsedAreas: React.FunctionComponent = (): React.ReactElement => {
+  const props = {
+    title: 'Used Area',
+    subtitle: 'These are your recent Used Areas',
+    redirect: 'statistics/add-used-area',
+    action: 'Add Used Area'
+  }
   return (
     <>
       <Helmet>
         <title>Used Areas</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -24,7 +30,7 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
           spacing={3}
         >
           <Grid item xs={12}>
-            <ListUsedService />
+            <ListUsedArea />
           </Grid>
         </Grid>
       </Container>
@@ -33,4 +39,4 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
   );
 }
 
-export default Services;
+export default UsedAreas;

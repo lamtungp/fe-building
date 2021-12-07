@@ -35,6 +35,9 @@
     If you don't have <b>Nodejs</b> installed, you just need to install <b>Nodejs</b> (npm will be installed on successful nodejs installation). <br/>
     For more details, visit: <a href="https://nodejs.org/en/">https://nodejs.org/en</a>. <br/>
     </li>
+    <li>IDE use: <br/>
+        <code>Visual Studio Code</code>
+    </li>
     <li>Clone repository: <br/>
     <code>git clone https://github.com/tunglamitptit/fe_building.git</code></li>
     <li>Install dependencies: <br/>

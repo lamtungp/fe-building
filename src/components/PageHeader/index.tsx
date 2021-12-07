@@ -4,7 +4,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-const PageHeader: React.FunctionComponent = (): React.ReactElement => {
+const PageHeader: React.FunctionComponent<any> = ({ props }): React.ReactElement => {
   const navigate = useNavigate()
   const { id } = useParams()
 
@@ -12,25 +12,26 @@ const PageHeader: React.FunctionComponent = (): React.ReactElement => {
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Floors
+          {props.title}
         </Typography>
         <Typography variant="subtitle2">
-          These are your recent floor
+          {props.subtitle}
         </Typography>
       </Grid>
-      <Grid item>
-        { !id ? 
+      {!id ? 
+        <Grid item>
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
             variant="contained"
             startIcon={<AddTwoToneIcon fontSize="small" />}
-            onClick={() => navigate('/management/add-floor')}
+            onClick={() => navigate(`/${props.redirect}`)}
           >
-            Add Floor
+            {props.action}
           </Button>
-          : <></>
-        }
-      </Grid>
+        </Grid>
+        : <></>
+      }
+      
     </Grid>
   );
 }

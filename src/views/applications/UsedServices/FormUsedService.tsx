@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { Button, Grid, Container, Box, Card, CardContent, Divider, Typography, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import SvServices from 'src/common/redux/service/services';
@@ -12,17 +12,14 @@ import withReactContent from 'sweetalert2-react-content';
 import UsedSvServices from 'src/common/redux/used_service/services';
 import CompanyServices from 'src/common/redux/company/services';
 import { ServiceEnums } from 'src/common/enums';
+import { MenuProps } from 'src/common/constants/MenuProps';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+const props = {
+  title: 'Used Services',
+  subtitle: 'These are your recent Used Services',
+  redirect: 'statistics/add-used-service',
+  action: 'Register service'
+}
 
 const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -124,7 +121,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
         <title>Form Used Service</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid

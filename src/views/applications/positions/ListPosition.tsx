@@ -1,12 +1,12 @@
 import { Card } from '@mui/material';
-import ListUsedServiceTable from './ListUsedServiceTable';
+import ListPositionTable from './ListPositionTable';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GlobalState } from 'src/common/redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
 import UsedSvServices from 'src/common/redux/used_service/services';
 
-const ListService: React.FunctionComponent = (): React.ReactElement => {
+const ListPosition: React.FunctionComponent = (): React.ReactElement => {
   const [services, setServices] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
@@ -31,9 +31,9 @@ const ListService: React.FunctionComponent = (): React.ReactElement => {
 
   return (
     <Card>
-      <ListUsedServiceTable services={services} />
+      <ListPositionTable services={services} />
     </Card>
   );
 }
 
-export default ListService;
+export default ListPosition;

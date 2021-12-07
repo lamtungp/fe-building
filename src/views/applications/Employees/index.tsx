@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
@@ -7,13 +7,20 @@ import Footer from 'src/components/Footer';
 import ListEmployee from './ListEmployee';
 
 const Employees: React.FunctionComponent = (): React.ReactElement => {
+  const props = {
+    title: 'Employees',
+    subtitle: "These are building's employees recent",
+    redirect: 'management/add-employee',
+    action: 'Add employee'
+  }
+
   return (
     <>
       <Helmet>
         <title>Employees</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid

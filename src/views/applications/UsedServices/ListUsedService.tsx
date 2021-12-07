@@ -6,7 +6,7 @@ import { GlobalState } from 'src/common/redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
 import UsedSvServices from 'src/common/redux/used_service/services';
 
-const ListService: React.FunctionComponent = (): React.ReactElement => {
+const ListUsedService: React.FunctionComponent = (): React.ReactElement => {
   const [services, setServices] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
@@ -36,4 +36,4 @@ const ListService: React.FunctionComponent = (): React.ReactElement => {
   );
 }
 
-export default ListService;
+export default ListUsedService;

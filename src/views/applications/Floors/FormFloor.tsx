@@ -4,23 +4,20 @@ import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, InputAdornment, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import FloorServices from 'src/common/redux/floor/services';
+import { MenuProps } from 'src/common/constants/MenuProps';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+const props = {
+  title: 'Floors',
+  subtitle: 'These are your recent floors',
+  redirect: 'management/add-floor',
+  action: 'Add floor'
+}
 
 const validationSchema = yup.object({
   name: yup
@@ -117,7 +114,7 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
         <title>Form Floor</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid

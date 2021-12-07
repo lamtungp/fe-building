@@ -1,19 +1,26 @@
 import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
 import ListUsedService from './ListUsedService';
 
-const Services: React.FunctionComponent = (): React.ReactElement =>{
+const Services: React.FunctionComponent = (): React.ReactElement => {
+  const props = {
+    title: 'Used Services',
+    subtitle: 'These are your recent Used Services',
+    redirect: 'statistics/add-used-service',
+    action: 'Register service'
+  }
+
   return (
     <>
       <Helmet>
         <title>Used Services</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid

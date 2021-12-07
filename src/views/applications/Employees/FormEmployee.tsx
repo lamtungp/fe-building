@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { TextField, Button, Grid, Container, Box, Card, CardContent, Divider, Typography, FormControl, InputLabel, MenuItem, Select, OutlinedInput } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import Footer from 'src/components/Footer';
 import EmployeeServices from 'src/common/redux/employee/services';
@@ -25,6 +25,13 @@ const validationSchema = yup.object({
     .string()
     .required('Phone Number is required'),
 });
+
+const props = {
+  title: 'Employees',
+  subtitle: "These are building's employees recent",
+  redirect: 'management/add-employee',
+  action: 'Add employee'
+}
 
 const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -107,7 +114,7 @@ const FormEmployee: React.FunctionComponent = (): React.ReactElement => {
         <title>Form Employee</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={props} />
       </PageTitleWrapper>
       <Container maxWidth="lg" fixed>
         <Grid
