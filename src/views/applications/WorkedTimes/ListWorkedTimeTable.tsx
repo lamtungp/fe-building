@@ -31,10 +31,11 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
 import { ServiceEnums } from 'src/common/enums';
+import WorkedTimeServices from 'src/common/redux/worked_time/services';
 
-interface ListServiceTableProps {
+interface ListWorkedTimeTableProps {
   className?: string;
-  services: any[];
+  worked_times: any[];
 }
 
 interface Filters {
@@ -42,10 +43,10 @@ interface Filters {
 }
 
 const applyFilters = (
-  services: any[],
+  worked_times: any[],
   filters: Filters
 ): any[] => {
-  return services.filter((serviceStatus) => {
+  return worked_times.filter((serviceStatus) => {
     let matches = true;
 
     if (filters.status && serviceStatus.status !== filters.status) {
@@ -57,50 +58,50 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  services: any[],
+  worked_times: any[],
   page: number,
   limit: number
 ): any[] => {
-  return services.slice(page * limit, page * limit + limit);
+  return worked_times.slice(page * limit, page * limit + limit);
 };
 
-const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
+const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => {
   const MySwal = withReactContent(Swal)
   const dispatch = useDispatch();
   const navigate = useNavigate()
   
-  const [selectedServices, setSelectedServices] = useState<string[]>(
+  const [selectedWorkedTimes, setSelectedWorkedTimes] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedServices.length > 0;
+  const selectedBulkActions = selectedWorkedTimes.length > 0;
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(10);
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
 
-  const handleSelectAllservices = (
+  const handleSelectAllWorkedTimes = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedServices(
+    setSelectedWorkedTimes(
       event.target.checked
-        ? services.map((employee) => employee.id)
+        ? worked_times.map((w) => w.id)
         : []
     );
   };
 
-  const handleSelectOneEmployee = (
+  const handleSelectOneWorkedTime = (
     event: ChangeEvent<HTMLInputElement>,
-    servicesId: string
+    workedTimesId: string
   ): void => {
-    if (!selectedServices.includes(servicesId)) {
-      setSelectedServices((prevSelected) => [
+    if (!selectedWorkedTimes.includes(workedTimesId)) {
+      setSelectedWorkedTimes((prevSelected) => [
         ...prevSelected,
-        servicesId
+        workedTimesId
       ]);
     } else {
-      setSelectedServices((prevSelected) =>
-        prevSelected.filter((id) => id !== servicesId)
+      setSelectedWorkedTimes((prevSelected) =>
+        prevSelected.filter((id) => id !== workedTimesId)
       );
     }
   };
@@ -113,23 +114,23 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredServices = applyFilters(services, filters);
-  const paginatedServices = applyPagination(
-    filteredServices,
+  const filteredWorkedTimes = applyFilters(worked_times, filters);
+  const paginatedWorkedTimes = applyPagination(
+    filteredWorkedTimes,
     page,
     limit
   );
-  const selectedSomeServices =
-    selectedServices.length > 0 &&
-    selectedServices.length < services.length;
-  const selectedAllServices =
-    selectedServices.length === services.length;
+  const selectedSomeWorkedTimes =
+    selectedWorkedTimes.length > 0 &&
+    selectedWorkedTimes.length < worked_times.length;
+  const selectedAllWorkedTimes =
+    selectedWorkedTimes.length === worked_times.length;
   const theme = useTheme();
 
-  const handleDeleteEmployee = async (id: string) => {
+  const handleDeleteWorkedTime = async (id: string) => {
     MySwal.fire({
       title: 'Are you sure?',
-      text: "You won't be delete this employee!",
+      text: "You won't be delete this Worked Time!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -137,11 +138,11 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await UsedSvServices.destroy(id);
+        const res = await WorkedTimeServices.destroy(id);
         if (res) {
           MySwal.fire(
             'Deleted!',
-            'Employee has been deleted.',
+            'Worked Time has been deleted.',
             'success'
           )
           dispatch(deleteItem(true))
@@ -168,36 +169,36 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllServices}
-                  indeterminate={selectedSomeServices}
-                  onChange={handleSelectAllservices}
+                  checked={selectedAllWorkedTimes}
+                  indeterminate={selectedSomeWorkedTimes}
+                  onChange={handleSelectAllWorkedTimes}
                 />
               </TableCell>
-              <TableCell>Company</TableCell>
-              <TableCell>Service</TableCell>
-              <TableCell>Total Price</TableCell>
+              <TableCell>Name Staff</TableCell>
+              <TableCell>Position</TableCell>
+              <TableCell>Worked Days</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedServices.map((used_service) => {
-              const isServiceSelected = selectedServices.includes(
-                used_service.id
+            {paginatedWorkedTimes.map((worked_time) => {
+              const isWorkedTimeSelected = selectedWorkedTimes.includes(
+                worked_time.id
               );
               return (
                 <TableRow
                   hover
-                  key={used_service.id}
-                  selected={isServiceSelected}
+                  key={worked_time.id}
+                  selected={isWorkedTimeSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isServiceSelected}
+                      checked={isWorkedTimeSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneEmployee(event, used_service.id)
+                        handleSelectOneWorkedTime(event, worked_time.id)
                       }
-                      value={isServiceSelected}
+                      value={isWorkedTimeSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -208,7 +209,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.company.name}
+                      {worked_time.staff.name}
                     </Typography>
                   </TableCell>
 
@@ -220,7 +221,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.name}
+                      {`${worked_time.salary.position} ${worked_time.salary.salary_grade}`}
                     </Typography>
                   </TableCell>
 
@@ -232,47 +233,42 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_service.service.unit_price}
+                      {worked_time.worked_days}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      VND
+                      days
                     </Typography>
                   </TableCell>
                   
                   <TableCell align="right">
-                    
-                      <>
-                        <Tooltip title="Details" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': {
-                                background: theme.colors.primary.lighter
-                              },
-                              color: theme.palette.primary.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => navigate(`/statistics/edit-used-service/${used_service.id}`)}
-                          >
-                            <EditTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </> 
-                    { (used_service.name === ServiceEnums.SECURITY || used_service.name === ServiceEnums.SECURITY) ?
-                      <Tooltip title="Delete" arrow>
-                          <IconButton
-                            sx={{
-                              '&:hover': { background: theme.colors.error.lighter },
-                              color: theme.palette.error.main
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => handleDeleteEmployee(used_service.id)}
-                          >
-                            <DeleteTwoToneIcon fontSize="small" />
-                          </IconButton>
-                      </Tooltip>: <></> 
-                    }
+                    <Tooltip title="Details" arrow>
+                      <IconButton
+                        sx={{
+                          '&:hover': {
+                            background: theme.colors.primary.lighter
+                          },
+                          color: theme.palette.primary.main
+                        }}
+                        color="inherit"
+                        size="small"
+                        onClick={() => navigate(`/statistics/edit-worked-time/${worked_time.id}`)}
+                      >
+                        <EditTwoToneIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': { background: theme.colors.error.lighter },
+                            color: theme.palette.error.main
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => handleDeleteWorkedTime(worked_time.id)}
+                        >
+                          <DeleteTwoToneIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
@@ -283,24 +279,24 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredServices.length}
+          count={filteredWorkedTimes.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
           rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 25, 30]}
+          rowsPerPageOptions={[10, 15, 20]}
         />
       </Box>
     </Card>
   );
 };
 
-ListUsedServiceTable.propTypes = {
-  services: PropTypes.array.isRequired
+ListWorkedTimeTable.propTypes = {
+  worked_times: PropTypes.array.isRequired
 };
 
-ListUsedServiceTable.defaultProps = {
-  services: []
+ListWorkedTimeTable.defaultProps = {
+  worked_times: []
 };
 
-export default ListUsedServiceTable;
+export default ListWorkedTimeTable;

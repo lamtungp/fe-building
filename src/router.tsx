@@ -24,6 +24,8 @@ const Companies = Loader(lazy(() => import('src/views/applications/Companies')))
 const UsedServices = Loader(lazy(() => import('src/views/applications/UsedServices')));
 const UsedAreas = Loader(lazy(() => import('src/views/applications/UsedAreas')));
 const Positions = Loader(lazy(() => import('src/views/applications/Positions')));
+const WorkedTimes = Loader(lazy(() => import('src/views/applications/WorkedTimes')));
+
 
 const FormBuilding = Loader(lazy(() => import('src/views/applications/Building/FormBuilding')));
 const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/FormCompany')));
@@ -34,6 +36,7 @@ const FormFloor = Loader(lazy(() => import('src/views/applications/Floors/FormFl
 const FormUsedService = Loader(lazy(() => import('src/views/applications/UsedServices/FormUsedService')));
 const FormUsedArea = Loader(lazy(() => import('src/views/applications/UsedAreas/FormUsedArea')));
 const FormPosition = Loader(lazy(() => import('src/views/applications/Positions/FormPosition')));
+const FormWorkedTime = Loader(lazy(() => import('src/views/applications/WorkedTimes/FormWorkedTime')));
 
 // const UserProfile = Loader(lazy(() => import('src/content/applications/Users/profile')));
 // const UserSettings = Loader(lazy(() => import('src/content/applications/Users/settings')));
@@ -212,6 +215,18 @@ const routes: PartialRouteObject[] = [
       {
         path: 'add-used-area',
         element: <FormUsedArea />
+      },
+      {
+        path: 'worked-times',
+        element: <WorkedTimes />
+      },
+      {
+        path: 'edit-worked-time/:id',
+        element: <FormWorkedTime />
+      },
+      {
+        path: 'add-worked-time',
+        element: <FormWorkedTime />
       },
     ]
   }

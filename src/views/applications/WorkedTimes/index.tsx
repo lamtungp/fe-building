@@ -1,19 +1,26 @@
 import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
+import PageHeader from 'src/components/PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import ListUsedService from './ListUsedService';
+import ListWorkedTime from './ListWorkedTime';
 
-const Services: React.FunctionComponent = (): React.ReactElement =>{
+const WorkedTimes: React.FunctionComponent = (): React.ReactElement => {
+  const props = {
+    title: 'Worked Times',
+    subtitle: 'These are your recent Worked Times',
+    redirect: 'statistics/add-worked-time',
+    action: 'Add worked time'
+  }
+
   return (
     <>
       <Helmet>
-        <title>Used Services</title>
+        <title>Worked Times</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader props={ props } />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -24,7 +31,7 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
           spacing={3}
         >
           <Grid item xs={12}>
-            <ListUsedService />
+            <ListWorkedTime />
           </Grid>
         </Grid>
       </Container>
@@ -33,4 +40,4 @@ const Services: React.FunctionComponent = (): React.ReactElement =>{
   );
 }
 
-export default Services;
+export default WorkedTimes;

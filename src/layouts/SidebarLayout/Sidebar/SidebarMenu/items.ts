@@ -90,7 +90,7 @@ const menuItems: MenuItems[] = [
       {
         name: 'Worked Time',
         icon: WorkIcon,
-        link: '/statistics/worked-time'
+        link: '/statistics/worked-times'
       }
     ]
   }
