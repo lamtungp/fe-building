@@ -172,7 +172,11 @@ const FormStaff: React.FunctionComponent = (): React.ReactElement => {
                   validateOnChange={true}
                 >
                   {({ handleChange, handleSubmit, errors, touched, values }) => (
-                    <form>
+                    <form onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit();
+                      }
+                    }}>
                       <Grid item xs={12}>
                         <TextField
                           fullWidth

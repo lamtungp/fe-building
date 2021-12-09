@@ -1,5 +1,4 @@
-import { FC, ChangeEvent, useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -29,6 +28,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
 import UsedAreaServices from 'src/common/redux/used_area/services';
+import { numberToString } from 'src/common/utils/transformPrice';
 
 interface ListUsedAreaTableProps {
   className?: string;
@@ -156,7 +156,7 @@ const ListUsedAreaTable: FC<ListUsedAreaTableProps> = ({ usedAreas }) => {
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader title="Services" />
+        <CardHeader title="Used Areas" />
       )}
       <Divider />
       <TableContainer>
@@ -248,7 +248,7 @@ const ListUsedAreaTable: FC<ListUsedAreaTableProps> = ({ usedAreas }) => {
                       gutterBottom
                       noWrap
                     >
-                      {used_area.floor.unit_price}
+                      {numberToString(used_area.floor.unit_price * used_area.used_area)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       VND

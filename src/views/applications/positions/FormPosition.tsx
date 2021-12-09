@@ -70,7 +70,7 @@ const FormPosition: React.FunctionComponent = (): React.ReactElement => {
     if (id) {
       getPosition(id);
     }
-  }, [])
+  }, [id])
 
   const handleSelectedSalaryGrade = (e: ChangeEvent<HTMLInputElement>): void => {
     setSelectedSalaryGrade(Number(e.target.value))
@@ -155,7 +155,11 @@ const FormPosition: React.FunctionComponent = (): React.ReactElement => {
                   validateOnChange={true}
                 >
                   {({ handleChange, handleSubmit, errors, touched, values }) => (
-                    <form>
+                    <form onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit();
+                      }
+                    }}>
                       <Grid item xs={12}>
                         {id ?
                           <TextField

@@ -25,7 +25,7 @@ const UsedServices = Loader(lazy(() => import('src/views/applications/UsedServic
 const UsedAreas = Loader(lazy(() => import('src/views/applications/UsedAreas')));
 const Positions = Loader(lazy(() => import('src/views/applications/Positions')));
 const WorkedTimes = Loader(lazy(() => import('src/views/applications/WorkedTimes')));
-
+const SalaryStaffs = Loader(lazy(() => import('src/views/applications/SalaryStaffs')));
 
 const FormBuilding = Loader(lazy(() => import('src/views/applications/Building/FormBuilding')));
 const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/FormCompany')));
@@ -227,6 +227,31 @@ const routes: PartialRouteObject[] = [
       {
         path: 'add-worked-time',
         element: <FormWorkedTime />
+      },
+    ]
+  },
+  {
+    path: 'report',
+    element: (
+      <SidebarLayout />
+    ),
+    children: [
+      {
+        path: '/',
+        element: (
+          <Navigate
+            to="salary-staff"
+            replace
+          />
+        )
+      },
+      {
+        path: 'salary-staff',
+        element: <SalaryStaffs />
+      },
+      {
+        path: 'service-charge',
+        element: <UsedServices />
       },
     ]
   }

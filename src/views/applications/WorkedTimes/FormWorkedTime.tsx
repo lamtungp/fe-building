@@ -64,7 +64,8 @@ const FormWorkedTime: React.FunctionComponent = (): React.ReactElement => {
       getWorkedTime(id);
     }
     getListStaff();
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   const handleSelectedStaff = (e: ChangeEvent<HTMLInputElement>): void => {
     setSelectedStaff(e.target.value)
@@ -149,7 +150,11 @@ const FormWorkedTime: React.FunctionComponent = (): React.ReactElement => {
                   validateOnChange={true}
                 >
                   {({ handleChange, handleSubmit, errors, touched, values }) => (
-                    <form>
+                    <form onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit();
+                      }
+                    }}>
                       <Grid container spacing={3}>
                         <Grid item xs={6}>
                           <FormControl fullWidth>

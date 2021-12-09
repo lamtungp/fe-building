@@ -17,6 +17,10 @@ import {
   Typography,
   useTheme,
   CardHeader,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@mui/material';
 
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -67,7 +71,13 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const MySwal = withReactContent(Swal)
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  
+  const statusOptions = [
+    {
+      id: 'all',
+      name: 'All'
+    }
+  ];
+
   const [selectedServices, setSelectedServices] = useState<string[]>(
     []
   );
@@ -103,6 +113,20 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       );
     }
   };
+
+  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    let value = null;
+
+    if (e.target.value !== 'all') {
+      value = e.target.value;
+    }
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      status: value
+    }));
+  };
+
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
@@ -157,7 +181,28 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader title="Services" />
+        <CardHeader 
+          action={
+            <Box width={150}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={filters.status || 'all'}
+                  onChange={handleStatusChange}
+                  label="Status"
+                  autoWidth
+                >
+                  {statusOptions.map((statusOption) => (
+                    <MenuItem key={statusOption.id} value={statusOption.id}>
+                      {statusOption.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          }
+          title="Services" 
+        />
       )}
       <Divider />
       <TableContainer>

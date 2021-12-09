@@ -1,6 +1,7 @@
 export const COMPANY_ACTIONS = {
   IS_DELETE: 'IS_DELETE',
-  SELECT_COMPANY: 'SELECT_COMPANY'
+  SELECT_COMPANY: 'SELECT_COMPANY',
+  SELECT_TIME: 'SELECT_TIME'
 };
 
 interface DeleteAction {
@@ -9,8 +10,13 @@ interface DeleteAction {
 }
 
 interface SelectCompanyAction {
-  type: typeof COMPANY_ACTIONS.IS_DELETE;
+  type: typeof COMPANY_ACTIONS.SELECT_COMPANY;
   payload: string;
 }
 
-export type { DeleteAction, SelectCompanyAction };
+interface SelectTimeAction {
+  type: typeof COMPANY_ACTIONS.SELECT_TIME;
+  payload: string;
+}
+
+export type { DeleteAction, SelectCompanyAction, SelectTimeAction };

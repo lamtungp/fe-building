@@ -1,5 +1,5 @@
 import { Card } from '@mui/material';
-import ListWorkedTimeTable from './ListWorkedTimeTable';
+import ListSalaryStaffTable from './ListSalaryStaffTable';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GlobalState } from 'src/common/redux';
@@ -7,15 +7,20 @@ import { deleteItem } from 'src/common/redux/table/Actions';
 import WorkedTimeServices from 'src/common/redux/worked_time/services';
 
 const ListWorkedTime: React.FunctionComponent = (): React.ReactElement => {
-  const [worked_times, setWorkedTimes] = useState()
+  const [salaryStaffs, setSalaryStaffs] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
-  const selected = useSelector((state: GlobalState) => state.table);
+  const selectTime = useSelector((state: GlobalState) => state.table.selectTime);
+
 
   const getListWorkedTime = async () => {
     try {
-      const data = await WorkedTimeServices.indexTime(selected.selectTime)
-      setWorkedTimes(data);
+      const data = await WorkedTimeServices.indexTime(selectTime)
+      data.map((e) => {
+        e.worked_salary = Math.round(e.salary.salary / 22 * e.worked_days)
+        return e
+      })
+      setSalaryStaffs(data);
     } catch (error) {
       console.log(error.message)
     }
@@ -23,16 +28,18 @@ const ListWorkedTime: React.FunctionComponent = (): React.ReactElement => {
 
   useEffect(() => {
     getListWorkedTime()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectTime])
 
   useEffect(() => {
     getListWorkedTime();
     dispatch(deleteItem(false));
-  }, [isDelete, selected.selectTime, dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDelete, dispatch])
 
   return (
     <Card>
-      <ListWorkedTimeTable worked_times={worked_times} />
+      <ListSalaryStaffTable salary_staffs={salaryStaffs} />
     </Card>
   );
 }

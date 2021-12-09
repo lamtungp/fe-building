@@ -83,7 +83,8 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
     }
     getListFloor();
     getListCompany();
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   const handleSelectedFloor = (e: ChangeEvent<HTMLInputElement>): void => {
     setSelectedFloor(e.target.value)
@@ -175,7 +176,11 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
                   validateOnChange={true}
                 >
                   {({ handleChange, handleSubmit, errors, touched, values }) => (
-                    <form>
+                    <form onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit();
+                      }
+                    }}>
                       <Grid container spacing={3} marginBottom={1}>
                         <Grid item xs={6}>
                           <FormControl fullWidth>

@@ -21,8 +21,8 @@ const WorkedTimeServices = {
     return results;
   },
 
-  indexUsedArea: (): Promise<any> => {
-    const results = AxiosClient.get(`/worked_time`);
+  indexTime: (time: string): Promise<any> => {
+    const results = AxiosClient.get(`/worked_time/report?time=${time}`);
     return results;
   },
 

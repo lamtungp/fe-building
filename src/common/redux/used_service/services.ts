@@ -23,8 +23,8 @@ const UsedSvServices = {
     return results;
   },
 
-  indexUsedService: (): Promise<any> => {
-    const results = AxiosClient.get(`/used_service`);
+  indexUsedService: (id: string, time: string): Promise<any> => {
+    const results = AxiosClient.get(`/used_service/list/${id}?time=${time}`);
     return results;
   },
 

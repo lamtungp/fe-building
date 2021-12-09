@@ -54,6 +54,7 @@ const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await getInforBuilding();
+          navigate('/management/building-information')
         }
       })
     }
@@ -106,7 +107,11 @@ const FormBuilding: React.FunctionComponent = (): React.ReactElement => {
                 validateOnChange={true}
             >
               {({ handleChange, handleSubmit, errors, touched, values }) => (
-                <form>
+                <form onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit();
+                  }
+                }}>
                   <Grid item xs={12}>
                     <TextField
                         fullWidth

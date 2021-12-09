@@ -1,13 +1,16 @@
+import { format } from 'date-fns';
 import { COMPANY_ACTIONS } from './ActionTypes';
 
 export interface TableState {
   isDelete: boolean;
   selectCompany: string;
+  selectTime: string;
 }
 
 const initialState: TableState = {
   isDelete: false,
-  selectCompany: ''
+  selectCompany: '',
+  selectTime: format(new Date(), 'MM/yyyy')
 };
 
 const reducer = (state = initialState, action: any): TableState => {
@@ -21,6 +24,11 @@ const reducer = (state = initialState, action: any): TableState => {
       return {
         ...state,
         selectCompany: action.payload
+      };
+    case COMPANY_ACTIONS.SELECT_TIME:
+      return {
+        ...state,
+        selectTime: action.payload
       };
     default:
       return state;

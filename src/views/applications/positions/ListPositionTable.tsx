@@ -1,5 +1,4 @@
-import { FC, ChangeEvent, useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { FC, ChangeEvent, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Tooltip,
@@ -28,7 +27,6 @@ import { deleteItem } from 'src/common/redux/table/Actions';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
-import { ServiceEnums } from 'src/common/enums';
 import SalaryServices from 'src/common/redux/salary/services';
 import { numberToString } from 'src/common/utils/transformPrice';
 
@@ -158,7 +156,7 @@ const ListPositionTable: FC<ListPositionTableProps> = ({ positions }) => {
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader title="Services" />
+        <CardHeader title="Positions" />
       )}
       <Divider />
       <TableContainer>

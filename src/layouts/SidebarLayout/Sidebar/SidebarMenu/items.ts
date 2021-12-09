@@ -48,19 +48,9 @@ const menuItems: MenuItems[] = [
         link: '/management/floors'
       },
       {
-        name: 'Employees',
-        icon: PeopleIcon,
-        link: '/management/employees'
-      },
-      {
         name: 'Staff building',
         icon: PeopleOutlineIcon,
         link: '/management/staff-building'
-      },
-      {
-        name: 'Companies',
-        icon: ApartmentIcon,
-        link: '/management/companies'
       },
       {
         name: 'Services',
@@ -71,6 +61,16 @@ const menuItems: MenuItems[] = [
         name: 'Position',
         icon: TableViewIcon,
         link: '/management/positions'
+      },
+      {
+        name: 'Companies',
+        icon: ApartmentIcon,
+        link: '/management/companies'
+      },
+      {
+        name: 'Employees',
+        icon: PeopleIcon,
+        link: '/management/employees'
       }
     ]
   },
@@ -91,6 +91,21 @@ const menuItems: MenuItems[] = [
         name: 'Worked Time',
         icon: WorkIcon,
         link: '/statistics/worked-times'
+      }
+    ]
+  },
+  {
+    heading: 'Reports',
+    items: [
+      {
+        name: 'Salary Staff',
+        icon: PermDataSettingIcon,
+        link: '/report/salary-staff'
+      },
+      {
+        name: 'Service Charge',
+        icon: SettingsOverscanIcon,
+        link: '/report/service-charge'
       }
     ]
   }

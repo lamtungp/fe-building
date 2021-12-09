@@ -1,6 +1,7 @@
 import {
   DeleteAction,
   SelectCompanyAction,
+  SelectTimeAction,
   COMPANY_ACTIONS
 } from './ActionTypes';
 
@@ -14,6 +15,13 @@ export const deleteItem = (params: boolean): DeleteAction => {
 export const selectCompany = (params: string): SelectCompanyAction => {
   return {
     type: COMPANY_ACTIONS.SELECT_COMPANY,
+    payload: params
+  };
+};
+
+export const selectTime = (params: string): SelectTimeAction => {
+  return {
+    type: COMPANY_ACTIONS.SELECT_TIME,
     payload: params
   };
 };

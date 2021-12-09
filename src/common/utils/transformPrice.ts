@@ -6,11 +6,11 @@ export const numberToString = (price: number): string => {
 
   while (price / 1000 >= 1) {
     if (price % 1000 === 0) {
-      str = str.concat(' 000');
+      str = ' 000' + str;
     } else {
-      str.concat(` ${String(price % 1000)}`);
+      str = ` ${String(price % 1000)}` + str;
     }
-    price /= 1000;
+    price = (price - (price % 1000)) / 1000;
   }
   return String(price).concat(`${str}`);
 };

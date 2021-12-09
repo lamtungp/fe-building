@@ -161,7 +161,11 @@ const FormUsedService: React.FunctionComponent = (): React.ReactElement => {
                   validateOnChange={true}
                 >
                   {({ handleSubmit }) => (
-                    <form>
+                    <form onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSubmit();
+                      }
+                    }}>
                       <Grid container spacing={3}>
                         <Grid item xs={6}>
                           <FormControl fullWidth>

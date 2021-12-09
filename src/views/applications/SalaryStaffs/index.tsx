@@ -1,25 +1,20 @@
 import { Helmet } from 'react-helmet-async';
+import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import ListUsedArea from './ListUsedArea';
-import PageHeader from 'src/components/PageHeader';
+import ListSalaryStaff from './ListSalaryStaff';
 
-const UsedAreas: React.FunctionComponent = (): React.ReactElement => {
-  const props = {
-    title: 'Used Areas',
-    subtitle: 'These are your recent Used Areas',
-    redirect: 'statistics/add-used-area',
-    action: 'Add Used Area'
-  }
+const WorkedTimes: React.FunctionComponent = (): React.ReactElement => {
+
   return (
     <>
       <Helmet>
-        <title>Used Areas</title>
+        <title>Worked Times</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader props={props} />
+        <PageHeader />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -30,7 +25,7 @@ const UsedAreas: React.FunctionComponent = (): React.ReactElement => {
           spacing={3}
         >
           <Grid item xs={12}>
-            <ListUsedArea />
+            <ListSalaryStaff />
           </Grid>
         </Grid>
       </Container>
@@ -39,4 +34,4 @@ const UsedAreas: React.FunctionComponent = (): React.ReactElement => {
   );
 }
 
-export default UsedAreas;
+export default WorkedTimes;

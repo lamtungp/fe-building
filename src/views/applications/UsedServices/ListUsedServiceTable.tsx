@@ -17,19 +17,28 @@ import {
   Typography,
   useTheme,
   CardHeader,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
 } from '@mui/material';
 
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
 import { useDispatch } from 'react-redux';
-import { deleteItem } from 'src/common/redux/table/Actions';
+import { deleteItem, selectCompany, selectTime } from 'src/common/redux/table/Actions';
 import UsedSvServices from 'src/common/redux/used_service/services';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate } from 'react-router-dom';
 import { ServiceEnums } from 'src/common/enums';
 import { numberToString } from 'src/common/utils/transformPrice';
+import CompanyServices from 'src/common/redux/company/services';
+import React from 'react';
+import { times } from 'src/common/constants/Times';
+import { format } from 'date-fns';
 
 interface ListServiceTableProps {
   className?: string;
@@ -68,6 +77,8 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   
+  const [listCompany, setListCompany] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>(
     []
   );
@@ -77,6 +88,8 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const [filters, setFilters] = useState<Filters>({
     status: null
   });
+  const [selectedTime, setSelectedTime] = useState<string>(format(new Date(), 'MM/yyyy'));
+
 
   const handleSelectAllUsedServices = (
     event: ChangeEvent<HTMLInputElement>
@@ -103,6 +116,20 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
       );
     }
   };
+  
+  const getListCompany = async (): Promise<any> => {
+    const data = await CompanyServices.index();
+    setListCompany(data)
+    if (data.length > 0) {
+      setSelectedCompany(data[0].id)
+      dispatch(selectCompany(data[0].id))
+    }
+  }
+
+  React.useEffect(() => {
+    getListCompany();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
@@ -124,6 +151,16 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const selectedAllServices =
     selectedServices.length === services.length;
   const theme = useTheme();
+
+  const handleSelectedCompany = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedCompany(e.target.value)
+    dispatch(selectCompany(e.target.value))
+  }
+
+  const handleSelectedTime = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedTime(e.target.value)
+    dispatch(selectTime(e.target.value))
+  }
 
   const handleDeleteUsedService = async (id: string) => {
     MySwal.fire({
@@ -157,7 +194,47 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
         </Box>
       )}
       {!selectedBulkActions && (
-        <CardHeader title="Services" />
+        <CardHeader 
+          action={
+            <Box width={300} display={'flex'}>
+              <FormControl fullWidth sx={{ marginTop: 1, marginRight: 1 }}>
+                <InputLabel>Select Time</InputLabel>
+                <Select
+                  value={selectedTime}
+                  onChange={handleSelectedTime}
+                  input={<OutlinedInput label="Select Time" />}
+                >
+                  {times.map((time, index) => (
+                    <MenuItem
+                      key={index}
+                      value={time}
+                    >
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth sx={{ marginTop: 1 }}>
+                <InputLabel>Select Company</InputLabel>
+                <Select
+                  value={selectedCompany}
+                  onChange={handleSelectedCompany}
+                  input={<OutlinedInput label="Select Company" />}
+                >
+                  {listCompany.map((company) => (
+                    <MenuItem
+                      key={company.id}
+                      value={company.id}
+                    >
+                      {company.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          }
+          title="Services" 
+        />
       )}
       <Divider />
       <TableContainer>

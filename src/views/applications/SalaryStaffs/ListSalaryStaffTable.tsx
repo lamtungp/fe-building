@@ -1,12 +1,11 @@
 import { FC, ChangeEvent, useState } from 'react';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import {
-  Tooltip,
   Divider,
   Box,
   Card,
   Checkbox,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -15,7 +14,6 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  useTheme,
   CardHeader,
   FormControl,
   InputLabel,
@@ -24,21 +22,15 @@ import {
   Select,
 } from '@mui/material';
 
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from 'src/components/BulkActions/BulkActions';
-import { useDispatch } from 'react-redux';
-import { deleteItem, selectTime } from 'src/common/redux/table/Actions';
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-import { useNavigate } from 'react-router-dom';
-import WorkedTimeServices from 'src/common/redux/worked_time/services';
-import { format } from 'date-fns';
+import { numberToString } from 'src/common/utils/transformPrice';
 import { times } from 'src/common/constants/Times';
+import { useDispatch } from 'react-redux';
+import { selectTime } from 'src/common/redux/table/Actions';
 
-interface ListWorkedTimeTableProps {
+interface ListSalaryStaffTableProps {
   className?: string;
-  worked_times: any[];
+  salary_staffs: any[];
 }
 
 interface Filters {
@@ -68,49 +60,42 @@ const applyPagination = (
   return worked_times.slice(page * limit, page * limit + limit);
 };
 
-const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => {
-  const MySwal = withReactContent(Swal)
+const ListSalaryStaffTable: FC<ListSalaryStaffTableProps> = ({ salary_staffs: salary_staffs }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  
-  const [selectedWorkedTimes, setSelectedWorkedTimes] = useState<string[]>(
+
+  const [selectedSalaryStaffs, setSelectedSalaryStaffs] = useState<string[]>(
     []
   );
-  const selectedBulkActions = selectedWorkedTimes.length > 0;
+  const selectedBulkActions = selectedSalaryStaffs.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
-  const [filters, setFilters] = useState<Filters>({
+  const filters = {
     status: null
-  });
+  };
   const [selectedTime, setSelectedTime] = useState<string>(format(new Date(), 'MM/yyyy'));
 
-  const handleSelectedTime = (e: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedTime(e.target.value)
-    dispatch(selectTime(e.target.value))
-  }
-
-  const handleSelectAllWorkedTimes = (
+  const handleSelectAllSalaryStaffs = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedWorkedTimes(
+    setSelectedSalaryStaffs(
       event.target.checked
-        ? worked_times.map((w) => w.id)
+        ? salary_staffs.map((w) => w.id)
         : []
     );
   };
 
-  const handleSelectOneWorkedTime = (
+  const handleSelectOneSalaryStaff = (
     event: ChangeEvent<HTMLInputElement>,
-    workedTimesId: string
+    salaryStaffsId: string
   ): void => {
-    if (!selectedWorkedTimes.includes(workedTimesId)) {
-      setSelectedWorkedTimes((prevSelected) => [
+    if (!selectedSalaryStaffs.includes(salaryStaffsId)) {
+      setSelectedSalaryStaffs((prevSelected) => [
         ...prevSelected,
-        workedTimesId
+        salaryStaffsId
       ]);
     } else {
-      setSelectedWorkedTimes((prevSelected) =>
-        prevSelected.filter((id) => id !== workedTimesId)
+      setSelectedSalaryStaffs((prevSelected) =>
+        prevSelected.filter((id) => id !== salaryStaffsId)
       );
     }
   };
@@ -123,42 +108,22 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredWorkedTimes = applyFilters(worked_times, filters);
-  const paginatedWorkedTimes = applyPagination(
-    filteredWorkedTimes,
+  const handleSelectedTime = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedTime(e.target.value)
+    dispatch(selectTime(e.target.value))
+  }
+
+  const filteredSalaryStaffs = applyFilters(salary_staffs, filters);
+  const paginatedSalaryStaffs = applyPagination(
+    filteredSalaryStaffs,
     page,
     limit
   );
-  const selectedSomeWorkedTimes =
-    selectedWorkedTimes.length > 0 &&
-    selectedWorkedTimes.length < worked_times.length;
-  const selectedAllWorkedTimes =
-    selectedWorkedTimes.length === worked_times.length;
-  const theme = useTheme();
-
-  const handleDeleteWorkedTime = async (id: string) => {
-    MySwal.fire({
-      title: 'Are you sure?',
-      text: "You won't be delete this Worked Time!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#28a745',
-      confirmButtonText: 'Yes, delete it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = await WorkedTimeServices.destroy(id);
-        if (res) {
-          MySwal.fire(
-            'Deleted!',
-            'Worked Time has been deleted.',
-            'success'
-          )
-          dispatch(deleteItem(true))
-        }
-      }
-    })
-  }
+  const selectedSomeSalaryStaffs =
+    selectedSalaryStaffs.length > 0 &&
+    selectedSalaryStaffs.length < salary_staffs.length;
+  const selectedAllSalaryStaffs =
+    selectedSalaryStaffs.length === salary_staffs.length;
 
   return (
     <Card>
@@ -190,7 +155,7 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
               </FormControl>
             </Box>
           }
-          title="Worked Times" 
+          title="Salary staff" 
         />
       )}
       <Divider />
@@ -201,36 +166,37 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllWorkedTimes}
-                  indeterminate={selectedSomeWorkedTimes}
-                  onChange={handleSelectAllWorkedTimes}
+                  checked={selectedAllSalaryStaffs}
+                  indeterminate={selectedSomeSalaryStaffs}
+                  onChange={handleSelectAllSalaryStaffs}
                 />
               </TableCell>
               <TableCell>Name Staff</TableCell>
               <TableCell>Position</TableCell>
               <TableCell>Worked Days</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>Location Working</TableCell>
+              <TableCell>Salary</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedWorkedTimes.map((worked_time) => {
-              const isWorkedTimeSelected = selectedWorkedTimes.includes(
-                worked_time.id
+            {paginatedSalaryStaffs.map((salary_staff) => {
+              const isSalaryStaffSelected = selectedSalaryStaffs.includes(
+                salary_staff.id
               );
               return (
                 <TableRow
                   hover
-                  key={worked_time.id}
-                  selected={isWorkedTimeSelected}
+                  key={salary_staff.id}
+                  selected={isSalaryStaffSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isWorkedTimeSelected}
+                      checked={isSalaryStaffSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneWorkedTime(event, worked_time.id)
+                        handleSelectOneSalaryStaff(event, salary_staff.id)
                       }
-                      value={isWorkedTimeSelected}
+                      value={isSalaryStaffSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -241,7 +207,7 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
                       gutterBottom
                       noWrap
                     >
-                      {worked_time.staff.name}
+                      {salary_staff.staff.name}
                     </Typography>
                   </TableCell>
 
@@ -253,7 +219,7 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
                       gutterBottom
                       noWrap
                     >
-                      {`${worked_time.salary.position} ${worked_time.salary.salary_grade}`}
+                      {`${salary_staff.salary.position} ${salary_staff.salary.salary_grade}`}
                     </Typography>
                   </TableCell>
 
@@ -265,42 +231,38 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
                       gutterBottom
                       noWrap
                     >
-                      {worked_time.worked_days}
+                      {salary_staff.worked_days}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
                       days
                     </Typography>
                   </TableCell>
-                  
-                  <TableCell align="right">
-                    <Tooltip title="Details" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                        onClick={() => navigate(`/statistics/edit-worked-time/${worked_time.id}`)}
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete" arrow>
-                        <IconButton
-                          sx={{
-                            '&:hover': { background: theme.colors.error.lighter },
-                            color: theme.palette.error.main
-                          }}
-                          color="inherit"
-                          size="small"
-                          onClick={() => handleDeleteWorkedTime(worked_time.id)}
-                        >
-                          <DeleteTwoToneIcon fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
+
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {salary_staff.staff.location.name}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                      noWrap
+                    >
+                      {numberToString(salary_staff.worked_salary)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      VND
+                    </Typography>
                   </TableCell>
                 </TableRow>
               );
@@ -311,7 +273,7 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredWorkedTimes.length}
+          count={filteredSalaryStaffs.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -323,12 +285,12 @@ const ListWorkedTimeTable: FC<ListWorkedTimeTableProps> = ({ worked_times }) => 
   );
 };
 
-ListWorkedTimeTable.propTypes = {
-  worked_times: PropTypes.array.isRequired
+ListSalaryStaffTable.propTypes = {
+  salary_staffs: PropTypes.array.isRequired
 };
 
-ListWorkedTimeTable.defaultProps = {
-  worked_times: []
+ListSalaryStaffTable.defaultProps = {
+  salary_staffs: []
 };
 
-export default ListWorkedTimeTable;
+export default ListSalaryStaffTable;

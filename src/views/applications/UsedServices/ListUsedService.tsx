@@ -10,10 +10,11 @@ const ListUsedService: React.FunctionComponent = (): React.ReactElement => {
   const [services, setServices] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
+  const selected = useSelector((state: GlobalState) => state.table);
 
   const getListService = async () => {
     try {
-      const data = await UsedSvServices.index()
+      const data = await UsedSvServices.indexUsedService(selected.selectCompany, selected.selectTime)
       setServices(data);
     } catch (error) {
       console.log(error.message)
@@ -27,7 +28,8 @@ const ListUsedService: React.FunctionComponent = (): React.ReactElement => {
   useEffect(() => {
     getListService();
     dispatch(deleteItem(false));
-  }, [isDelete, dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDelete, selected.selectCompany,selected.selectTime, dispatch])
 
   return (
     <Card>
