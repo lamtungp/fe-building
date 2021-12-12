@@ -23,11 +23,13 @@ const ListWorkedTime: React.FunctionComponent = (): React.ReactElement => {
 
   useEffect(() => {
     getListWorkedTime()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     getListWorkedTime();
     dispatch(deleteItem(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDelete, selected.selectTime, dispatch])
 
   return (

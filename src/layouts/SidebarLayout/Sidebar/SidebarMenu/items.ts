@@ -10,6 +10,8 @@ import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import TableViewIcon from '@mui/icons-material/TableView';
 import WorkIcon from '@mui/icons-material/Work';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -99,13 +101,13 @@ const menuItems: MenuItems[] = [
     items: [
       {
         name: 'Salary Staff',
-        icon: PermDataSettingIcon,
+        icon: EventNoteIcon,
         link: '/report/salary-staff'
       },
       {
-        name: 'Service Charge',
-        icon: SettingsOverscanIcon,
-        link: '/report/service-charge'
+        name: 'Company Statics',
+        icon: AssessmentIcon,
+        link: '/report/company-statistics'
       }
     ]
   }

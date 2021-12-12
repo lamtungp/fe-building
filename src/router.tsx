@@ -26,6 +26,7 @@ const UsedAreas = Loader(lazy(() => import('src/views/applications/UsedAreas')))
 const Positions = Loader(lazy(() => import('src/views/applications/Positions')));
 const WorkedTimes = Loader(lazy(() => import('src/views/applications/WorkedTimes')));
 const SalaryStaffs = Loader(lazy(() => import('src/views/applications/SalaryStaffs')));
+const CompanyStatistics = Loader(lazy(() => import('src/views/applications/CompanyStatistics')));
 
 const FormBuilding = Loader(lazy(() => import('src/views/applications/Building/FormBuilding')));
 const FormCompany = Loader(lazy(() => import('src/views/applications/Companies/FormCompany')));
@@ -250,8 +251,8 @@ const routes: PartialRouteObject[] = [
         element: <SalaryStaffs />
       },
       {
-        path: 'service-charge',
-        element: <UsedServices />
+        path: 'company-statistics',
+        element: <CompanyStatistics />
       },
     ]
   }

@@ -6,7 +6,7 @@ import { GlobalState } from 'src/common/redux';
 import { deleteItem } from 'src/common/redux/table/Actions';
 import WorkedTimeServices from 'src/common/redux/worked_time/services';
 
-const ListWorkedTime: React.FunctionComponent = (): React.ReactElement => {
+const ListSalaryStaff: React.FunctionComponent = (): React.ReactElement => {
   const [salaryStaffs, setSalaryStaffs] = useState()
   const dispatch = useDispatch();
   const isDelete = useSelector((state: GlobalState) => state.table.isDelete);
@@ -44,4 +44,4 @@ const ListWorkedTime: React.FunctionComponent = (): React.ReactElement => {
   );
 }
 
-export default ListWorkedTime;
+export default ListSalaryStaff;

@@ -4,9 +4,9 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid, Container } from '@mui/material';
 import Footer from 'src/components/Footer';
 
-import ListSalaryStaff from './ListSalaryStaff';
+import ListCompanyStatistics from './ListCompanyStatistics';
 
-const SalaryStaffs: React.FunctionComponent = (): React.ReactElement => {
+const CompanyStatistics: React.FunctionComponent = (): React.ReactElement => {
 
   return (
     <>
@@ -25,7 +25,7 @@ const SalaryStaffs: React.FunctionComponent = (): React.ReactElement => {
           spacing={3}
         >
           <Grid item xs={12}>
-            <ListSalaryStaff />
+            <ListCompanyStatistics />
           </Grid>
         </Grid>
       </Container>
@@ -34,4 +34,4 @@ const SalaryStaffs: React.FunctionComponent = (): React.ReactElement => {
   );
 }
 
-export default SalaryStaffs;
+export default CompanyStatistics;

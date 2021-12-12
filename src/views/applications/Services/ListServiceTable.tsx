@@ -84,9 +84,7 @@ const ListServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const selectedBulkActions = selectedServices.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
+  const [filters, setFilters ] = useState({ status: null });
 
   const handleSelectAllServices = (
     event: ChangeEvent<HTMLInputElement>

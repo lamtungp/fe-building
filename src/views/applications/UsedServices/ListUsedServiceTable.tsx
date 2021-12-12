@@ -85,9 +85,7 @@ const ListUsedServiceTable: FC<ListServiceTableProps> = ({ services }) => {
   const selectedBulkActions = selectedServices.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
+  const filters= { status: null };
   const [selectedTime, setSelectedTime] = useState<string>(format(new Date(), 'MM/yyyy'));
 
 

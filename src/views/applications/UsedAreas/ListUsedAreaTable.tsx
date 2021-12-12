@@ -73,9 +73,7 @@ const ListUsedAreaTable: FC<ListUsedAreaTableProps> = ({ usedAreas }) => {
   const selectedBulkActions = selectedUsedAreas.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
+  const filters = { status: null };
 
   const handleSelectAllUsedAreas = (
     event: ChangeEvent<HTMLInputElement>
